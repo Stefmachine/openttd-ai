@@ -1,24 +1,15 @@
 class Autoloader
 {
-    instance = {};
-    loaded = null;
+    static loaded = {};
 
-    constructor(){
-        this.loaded = {};
-    }
-
-    static function load(_class)
+    function load(_class)
     {
-        if(!("self" in Autoloader.instance)){
-            Autoloader.instance.self <- Autoloader();
-        }
-
-        if(!(_class in Autoloader.instance.self.loaded)){
+        if(!(_class in Autoloader.loaded)){
+            Autoloader.loaded[_class] <- true;
             require("src/"+_class+".nut");
-            Autoloader.instance.self.loaded[_class] <- true;
         }
 
-        return Autoloader.instance.self.loaded[_class];
+        return Autoloader.loaded[_class];
     }
 }
 

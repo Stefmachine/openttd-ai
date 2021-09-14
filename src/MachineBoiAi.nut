@@ -3,7 +3,7 @@ using("Company/CompanyManager");
 class MachineBoiAi extends AIController {
     constructor() {}
 
-    companyManager = CompanyManager(AICompany);
+    companyManager = CompanyManager();
 
     function Start() {
         AILog.Info("MachineBoiAI Started.");

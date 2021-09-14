@@ -1,26 +1,28 @@
+using("Resources/ResourceManager");
+
 class CompanyManager
 {
-    aiCompanyApi = null;
-
-    constructor(_aiCompanyApi){
-        this.aiCompanyApi = _aiCompanyApi;
-    }
-
     function createCompany()
     {
-        this.aiCompanyApi.SetName("YASSS");
-        this.aiCompanyApi.SetPresidentName("HEEEEYO");
+        local names = ResourceManager.loadResource("company.names");
+        local presidentNames = ResourceManager.loadResource("company.president_names");
+        local gender = [AICompany.GENDER_MALE, AICompany.GENDER_FEMALE][AIBase.RandRange(2)];
+        AICompany.SetPresidentGender(gender);
+        AICompany.SetName(names[AIBase.RandRange(names.len())]);
+        AICompany.SetPresidentName(presidentNames[gender][AIBase.RandRange(presidentNames[gender].len())]);
+
+        AILog.Info("Created company with data: "+this.exportCompanyData().tostring());
     }
 
     function importCompanyData(_version, _companyData)
     {
         this.createCompany();
         if("name" in _companyData){
-             this.aiCompanyApi.SetName(_companyData.name);
+             AICompany.SetName(_companyData.name);
         }
 
         if("presidentName" in _companyData){
-             this.aiCompanyApi.SetPresidentName(_companyData.presidentName);
+             AICompany.SetPresidentName(_companyData.presidentName);
         }
 
         AILog.Info("Imported AI info");
@@ -30,13 +32,14 @@ class CompanyManager
     {
         AILog.Info("Exported AI info");
         return {
-            name = this.aiCompanyApi.GetName(this.getId())
-            presidentName = this.aiCompanyApi.GetPresidentName(this.getId())
+            name = AICompany.GetName(this.getId())
+            gender = AICompany.GetPresidentGender(this.getId())
+            presidentName = AICompany.GetPresidentName(this.getId())
         }
     }
 
     function getId()
     {
-        return this.aiCompanyApi.COMPANY_SELF;
+        return AICompany.COMPANY_SELF;
     }
 }
