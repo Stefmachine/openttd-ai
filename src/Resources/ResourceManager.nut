@@ -1,16 +1,20 @@
-using("Utils/StringHelper")
+using("MachineBoiAi.Utils.String");
 
-class ResourceManager {
-    static loadedResources = {};
+class MachineBoiAi.Resources.ResourceManager
+{
+    static Utils = MachineBoiAi.Utils;
 
-    function loadResource(_id) {
-        local idParts = StringHelper.split(_id, ".");
-        local table = ResourceManager;
+    function loadResource(_id)
+    {
+        local self = MachineBoiAi.Resources.ResourceManager;
+
+        local idParts = self.Utils.String.split(_id, ".");
+        local table = self;
         foreach(index, id in idParts) {
             if (!(id in table)) {
                 table[id] <- {};
                 if (index == idParts.len() - 1) {
-                    require("../../resources/" + ResourceManager.resourceIdToPath(_id) + ".en.nut");
+                    require(self.resourceIdToPath(_id));
                 }
             }
 
@@ -20,7 +24,10 @@ class ResourceManager {
         return table;
     }
 
-    function resourceIdToPath(_id) {
-        return StringHelper.replace(_id, ".", "/");
+    function resourceIdToPath(_id)
+    {
+        local self = MachineBoiAi.Resources.ResourceManager;
+
+        return "../../resources/" + self.Utils.String.replace(_id, ".", "/") + ".en.nut";
     }
 }

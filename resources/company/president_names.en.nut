@@ -1,4 +1,4 @@
-ResourceManager.company.president_names =  {
+MachineBoiAi.Resources.ResourceManager.company.president_names =  {
     [AICompany.GENDER_FEMALE] = [
         "Phyliss Whittenberg",
         "Jenae Cumberbatch",

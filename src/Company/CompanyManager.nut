@@ -1,45 +1,33 @@
-using("Resources/ResourceManager");
+local DataStore = using("MachineBoiAi.DataStore");
+local ResourceManager = using("MachineBoiAi.Resources.ResourceManager");
 
-class CompanyManager
-{
-    function createCompany()
-    {
+class MachineBoiAi.Company.CompanyManager {
+    static ResourceManager = ResourceManager;
+    static company = DataStore.data.company;
+
+    function updateCompanyInfo() {
+        // Setting company name
         local names = ResourceManager.loadResource("company.names");
+        local iterations = 0;
+        local name = company.name;
+        while ((name == null || !AICompany.SetName(name)) && iterations < 255) {
+            iterations++;
+            name = names[AIBase.RandRange(names.len())];
+        }
+        company.name = AICompany.GetName(this.getId());
+
+        // Setting president gender
+        company.president.gender = company.president.gender != null ? company.president.gender : [AICompany.GENDER_MALE, AICompany.GENDER_FEMALE][AIBase.RandRange(2)];
+        AICompany.SetPresidentGender(company.president.gender);
+
+        // Setting president name
         local presidentNames = ResourceManager.loadResource("company.president_names");
-        local gender = [AICompany.GENDER_MALE, AICompany.GENDER_FEMALE][AIBase.RandRange(2)];
-        AICompany.SetPresidentGender(gender);
-        AICompany.SetName(names[AIBase.RandRange(names.len())]);
-        AICompany.SetPresidentName(presidentNames[gender][AIBase.RandRange(presidentNames[gender].len())]);
-
-        AILog.Info("Created company with data: "+this.exportCompanyData().tostring());
+        local randomPresidentName = presidentNames[company.president.gender][AIBase.RandRange(presidentNames[company.president.gender].len())]
+        company.president.name = company.president.name != null ? company.president.name : randomPresidentName
+        AICompany.SetPresidentName(company.president.name);
     }
 
-    function importCompanyData(_version, _companyData)
-    {
-        this.createCompany();
-        if("name" in _companyData){
-             AICompany.SetName(_companyData.name);
-        }
-
-        if("presidentName" in _companyData){
-             AICompany.SetPresidentName(_companyData.presidentName);
-        }
-
-        AILog.Info("Imported AI info");
-    }
-
-    function exportCompanyData()
-    {
-        AILog.Info("Exported AI info");
-        return {
-            name = AICompany.GetName(this.getId())
-            gender = AICompany.GetPresidentGender(this.getId())
-            presidentName = AICompany.GetPresidentName(this.getId())
-        }
-    }
-
-    function getId()
-    {
+    function getId() {
         return AICompany.COMPANY_SELF;
     }
 }

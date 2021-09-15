@@ -1,4 +1,5 @@
-class MachineBoiAiInfo extends AIInfo {
+class MachineBoiAi.Info extends AIInfo
+{
     function GetAuthor() {
         return "Stefmachine";
     }
@@ -20,7 +21,7 @@ class MachineBoiAiInfo extends AIInfo {
     }
 
     function CreateInstance() {
-        return "MachineBoiAi";
+        return "__MachineBoiAiController";
     }
 
     function GetShortName() {
@@ -28,6 +29,6 @@ class MachineBoiAiInfo extends AIInfo {
     }
 
     function GetAPIVersion() {
-        return "1.9";
+        return "1.10";
     }
 }

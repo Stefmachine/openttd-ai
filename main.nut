@@ -1,3 +1,3 @@
 require("autoload.nut");
 
-using("MachineBoiAi");
+__MachineBoiAiController <- using("MachineBoiAi.Controller");

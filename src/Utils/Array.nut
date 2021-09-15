@@ -1,4 +1,4 @@
-class ArrayHelper
+class MachineBoiAi.Utils.Array
 {
     function join(_array, _separator = "")
     {
