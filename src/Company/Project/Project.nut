@@ -3,8 +3,6 @@ using("MachineBoiAi.Data.DataStore");
 
 class MachineBoiAi.Company.Project.Project
 {
-    static storageKey = "projects";
-
     __evaluation = null
     __targets = []
     __destinationTiles = []
@@ -15,4 +13,4 @@ class MachineBoiAi.Company.Project.Project
         this.__destinationTiles = []
     }
 }
-MachineBoiAi.Data.DataStore.composeStorable(MachineBoiAi.Company.Project.Project);
+MachineBoiAi.Data.DataStore.composeStorable(MachineBoiAi.Company.Project.Project, "projects");

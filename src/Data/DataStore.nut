@@ -42,13 +42,37 @@ class MachineBoiAi.Data.DataStore
 
 
     // Storable composition API
-    function composeStorable(_class)
+    function composeStorable(_class, _storageKey)
     {
-        if(!("storageKey" in _class)){
-            throw "Static property storageKey must be declared in Storable composed class.";
+        if(!(_storageKey in MachineBoiAi.Data.DataStore.data)){
+            throw "StorageKey '"+_storageKey+"' does not exist in DataStore data.";
         }
 
+        _class.storageKey <- _storageKey;
         _class.__id <- null;
+
+
+        _class._get <- function(_prop) {
+            if(_prop == "id"){
+                return this.__id;
+            }
+
+            if(_prop == "index"){
+                return MachineBoiAi.Utils.Array.indexOf(MachineBoiAi.Data.DataStore.data[this.storageKey].id, this.__id);
+            }
+
+            local prop = "__"+_prop;
+            if(prop in this){
+                if(this.__id != null){
+                    return MachineBoiAi.Data.DataStore.data[this.storageKey][_prop][this.index];
+                }
+                else{
+                    return this[prop];
+                }
+            }
+
+            throw "Property "+_prop+" not found in object.";
+        };
 
         _class._set <- function(_prop, _value) {
             local prop = "__"+_prop;
@@ -58,41 +82,15 @@ class MachineBoiAi.Data.DataStore
 
             if(prop in this){
                 if(this.__id != null && this.index > -1){
-                    ::MachineBoiAi.Data.DataStore.data[this.storageKey][_prop][this.index] = _value;
+                    MachineBoiAi.Data.DataStore.data[this.storageKey][_prop][this.index] = _value;
                 }
                 else{
-                    ::AILog.Warning("Setting "+prop);
                     this[prop] = _value;
                 }
                 return;
             }
 
             throw "Property "+_prop+" named '"+prop+"' not found in object.";
-        };
-
-        _class._get <- function(_prop) {
-            if(_prop == "id"){
-                return this.__id;
-            }
-
-            if(_prop == "index"){
-                local index = ::MachineBoiAi.Utils.Array.indexOf(::MachineBoiAi.Data.DataStore.data[this.storageKey], this.id);
-                return ::MachineBoiAi.Data.DataStore.data[this.storageKey].id[index];
-            }
-
-            local prop = "__"+_prop;
-            if(prop in this){
-                if(this.__id != null){
-                    ::AILog.Warning("Getting "+_prop+"");
-                    return ::MachineBoiAi.Data.DataStore.data[this.storageKey][_prop][this.index];
-                }
-                else{
-                    ::AILog.Warning("Getting "+_prop);
-                    return this[prop];
-                }
-            }
-
-            throw "Property "+_prop+" not found in object.";
         };
 
         return _class;
