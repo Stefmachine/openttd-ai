@@ -1,7 +1,6 @@
-using("MachineBoiAi.Utils");
-using("MachineBoiAi.Data.DataStore");
+using("MBAi.Data.DataStore.Storable");
 
-class MachineBoiAi.Company.Project.Project
+class MBAi.Company.Project.Project extends MBAi.Data.DataStore.Storable
 {
     __evaluation = null
     __targets = []
@@ -13,4 +12,3 @@ class MachineBoiAi.Company.Project.Project
         this.__destinationTiles = []
     }
 }
-MachineBoiAi.Data.DataStore.composeStorable(MachineBoiAi.Company.Project.Project, "projects");

@@ -1,4 +1,4 @@
-MachineBoiAi.Resource.company.names = [
+MBAi.Resource.company.names = [
     "Transport",
     "Transport Rush",
     "Check Transport",

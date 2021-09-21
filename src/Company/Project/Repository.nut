@@ -1,8 +1,8 @@
-local DataStore = using("MachineBoiAi.Data.DataStore");
-local Project = using("MachineBoiAi.Company.Project.Project");
-local Utils = using("MachineBoiAi.Utils");
+local DataStore = using("MBAi.Data.DataStore");
+local Project = using("MBAi.Company.Project.Project");
+local Utils = using("MBAi.Utils");
 
-class MachineBoiAi.Company.Project.Repository
+class MBAi.Company.Project.Repository
 {
     static Project = Project;
     static DataStore = DataStore;
@@ -21,7 +21,7 @@ class MachineBoiAi.Company.Project.Repository
     function add(_project)
     {
         if(_project instanceof Project && _project.id == null){
-            DataStore.transaction(function(_data):(_project){
+            DataStore.transaction(function(_data, _project){
                 local projectDataStore = _data.projects
                 local id = projectDataStore.__meta.nextId++;
                 projectDataStore.id.push(id);
@@ -29,7 +29,21 @@ class MachineBoiAi.Company.Project.Repository
                 projectDataStore.targets.push(_project.targets);
                 projectDataStore.destinationTiles.push(_project.destinationTiles);
                 _project.__id = id;
-            });
+            }, _project);
+        }
+    }
+
+    function remove(_project)
+    {
+        if(_project instanceof Project && _project.id != null){
+            DataStore.transaction(function(_data, _project){
+                local projectDataStore = _data.projects
+                local index = _project.index;
+                foreach (column in projectDataStore.__meta.columns) {
+                    projectDataStore[column].remove(index);
+                }
+                _project.__id = null;
+            }, _project);
         }
     }
 }

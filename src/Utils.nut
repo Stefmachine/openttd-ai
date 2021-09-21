@@ -1,23 +1,23 @@
-class MachineBoiAi.Utils
+class MBAi.Utils
 {
-    function deepClone(container){
+    function deepClone(_container){
         // container must not have circular references
-        switch(typeof(container)){
+        switch(typeof(_container)){
             case "table":
-                local result = clone container;
-                foreach( k,v in container){
-                    result[k] = MachineBoiAi.Utils.deepClone(v);
+                local result = clone _container;
+                foreach( k,v in _container){
+                    result[k] = MBAi.Utils.deepClone(v);
                 }
                 return result;
             case "array":
-                return MachineBoiAi.Utils.Array.map(container, MachineBoiAi.Utils.deepClone);
+                return MBAi.Utils.Array.map(_container, MBAi.Utils.deepClone);
             default:
-                return container;
+                return _container;
         }
     }
 }
 
-class MachineBoiAi.Utils.Array
+class MBAi.Utils.Array
 {
     function join(_array, _separator = "")
     {
@@ -47,6 +47,26 @@ class MachineBoiAi.Utils.Array
     {
         local mapped = [];
         foreach (index, value in _array) {
+            mapped.push(_mapFunction(value));
+        }
+
+        return mapped;
+    }
+
+    function mapi(_array, _mapFunction)
+    {
+        local mapped = [];
+        foreach (index, value in _array) {
+            mapped.push(_mapFunction(value, index));
+        }
+
+        return mapped;
+    }
+
+    function mapia(_array, _mapFunction)
+    {
+        local mapped = [];
+        foreach (index, value in _array) {
             mapped.push(_mapFunction(value, index, _array));
         }
 
@@ -54,7 +74,7 @@ class MachineBoiAi.Utils.Array
     }
 }
 
-class MachineBoiAi.Utils.Statement
+class MBAi.Utils.Statement
 {
     function coalesce(...)
     {
@@ -67,7 +87,7 @@ class MachineBoiAi.Utils.Statement
     }
 }
 
-class MachineBoiAi.Utils.String
+class MBAi.Utils.String
 {
     function split(_string, _separator = "")
     {
@@ -75,7 +95,7 @@ class MachineBoiAi.Utils.String
         if (_separator != "") {
             for (local index = _string.find(_separator); index != null; index = _string.find(_separator)) {
                 parts.append(_string.slice(0, index));
-                _string = _string.slice(index + 1);
+                _string = _string.slice(index + _separator.len());
             }
             parts.append(_string);
         } else {
@@ -89,6 +109,6 @@ class MachineBoiAi.Utils.String
 
     function replace(_string, _search, _replacement)
     {
-        return MachineBoiAi.Utils.Array.join(MachineBoiAi.Utils.String.split(_string, _search), _replacement);
+        return MBAi.Utils.Array.join(MBAi.Utils.String.split(_string, _search), _replacement);
     }
 }

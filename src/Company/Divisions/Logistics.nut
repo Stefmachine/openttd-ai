@@ -1,6 +1,6 @@
 import("pathfinder.rail", "RailPathFinder", 1);
 
-class MachineBoiAi.Company.Divisions.Logistics
+class MBAi.Company.Divisions.Logistics
 {
     constructor(){
     }
