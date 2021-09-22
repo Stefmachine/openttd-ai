@@ -23,38 +23,38 @@ class MBAi.Company.Divisions.Logistics
         local startTile = _project.destinationTiles[0];
         local endTile = _project.destinationTiles[1];
         pathfinder.InitializePath([
-            [startTile, startTile + AIMap.GetTileIndex(-1, 0)]
+            [startTile, startTile + ::AIMap.GetTileIndex(-1, 0)]
         ], [
-            [endTile + AIMap.GetTileIndex(-1, 0), endTile]
+            [endTile + ::AIMap.GetTileIndex(-1, 0), endTile]
         ]);
 
-        AILog.Info("Calculating path.");
+        ::AILog.Info("Calculating path.");
         local path = pathfinder.FindPath(10000);
 
         if(!path){
-            AILog.Warning("No path found.");
+            ::AILog.Warning("No path found.");
             return;
         }
 
         local prev = null;
         local prevprev = null;
-        AILog.Info("Starting to build rails.");
+        ::AILog.Info("Starting to build rails.");
         while (path != null) {
             if (prevprev != null) {
-                if (AIMap.DistanceManhattan(prev, path.GetTile()) > 1) {
-                    if (AITunnel.GetOtherTunnelEnd(prev) == path.GetTile()) {
-                        AITunnel.BuildTunnel(AIVehicle.VT_RAIL, prev);
+                if (::AIMap.DistanceManhattan(prev, path.GetTile()) > 1) {
+                    if (::AITunnel.GetOtherTunnelEnd(prev) == path.GetTile()) {
+                        ::AITunnel.BuildTunnel(::AIVehicle.VT_RAIL, prev);
                     } else {
-                        local bridge_list = AIBridgeList_Length(AIMap.DistanceManhattan(path.GetTile(), prev) + 1);
-                        bridge_list.Valuate(AIBridge.GetMaxSpeed);
-                        bridge_list.Sort(AIAbstractList.SORT_BY_VALUE, false);
-                        AIBridge.BuildBridge(AIVehicle.VT_RAIL, bridge_list.Begin(), prev, path.GetTile());
+                        local bridge_list = ::AIBridgeList_Length(::AIMap.DistanceManhattan(path.GetTile(), prev) + 1);
+                        bridge_list.Valuate(::AIBridge.GetMaxSpeed);
+                        bridge_list.Sort(::AIAbstractList.SORT_BY_VALUE, false);
+                        ::AIBridge.BuildBridge(::AIVehicle.VT_RAIL, bridge_list.Begin(), prev, path.GetTile());
                     }
                     prevprev = prev;
                     prev = path.GetTile();
                     path = path.GetParent();
                 } else {
-                    AIRail.BuildRail(prevprev, prev, path.GetTile());
+                    ::AIRail.BuildRail(prevprev, prev, path.GetTile());
                 }
             }
             if (path != null) {
@@ -63,6 +63,6 @@ class MBAi.Company.Divisions.Logistics
                 path = path.GetParent();
             }
         }
-        AILog.Info("Finished building rails.");
+        ::AILog.Info("Finished building rails.");
     }
 }

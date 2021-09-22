@@ -37,17 +37,17 @@ class MBAi.Data.DataStore
 
     function import(_version, _data)
     {
-        MBAi.Data.DataStore.data <- _data;
+        ::MBAi.Data.DataStore.data <- _data;
     }
 
     function export()
     {
-        return MBAi.Data.DataStore.data;
+        return ::MBAi.Data.DataStore.data;
     }
 
     function transaction(_function, ...)
     {
-        local dataClone = MBAi.Utils.deepClone(MBAi.Data.DataStore.data);
+        local dataClone = ::MBAi.Utils.deepClone(::MBAi.Data.DataStore.data);
 
         local args = [null, dataClone];
         for(local i = 0; i < vargc; i++){
@@ -55,14 +55,14 @@ class MBAi.Data.DataStore
         }
 
         _function.acall(args);
-        AIController.Sleep(1);
-        MBAi.Data.DataStore.data <- dataClone;
+        ::AIController.Sleep(1);
+        ::MBAi.Data.DataStore.data <- dataClone;
     }
 }
 
 class MBAi.Data.DataStore.Storable
 {
-    static DataStore = MBAi.Data.DataStore;
+    static DataStore = ::MBAi.Data.DataStore;
 
     __id = null;
 
@@ -88,7 +88,7 @@ class MBAi.Data.DataStore.Storable
         }
 
         if(_prop == "index"){
-            return MBAi.Utils.Array.indexOf(this.getStorage().id, this.__id);
+            return ::MBAi.Utils.Array.indexOf(this.getStorage().id, this.__id);
         }
 
         local prop = "__"+_prop;

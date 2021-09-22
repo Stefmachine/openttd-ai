@@ -5,7 +5,7 @@ class Autoloader
     static loaded = {};
     static namespaces = {
         MBAi = {
-            ref = MBAi
+            ref = ::MBAi
             dir = "src"
         }
     }

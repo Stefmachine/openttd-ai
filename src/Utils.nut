@@ -6,11 +6,11 @@ class MBAi.Utils
             case "table":
                 local result = clone _container;
                 foreach( k,v in _container){
-                    result[k] = MBAi.Utils.deepClone(v);
+                    result[k] = ::MBAi.Utils.deepClone(v);
                 }
                 return result;
             case "array":
-                return MBAi.Utils.Array.map(_container, MBAi.Utils.deepClone);
+                return ::MBAi.Utils.Array.map(_container, ::MBAi.Utils.deepClone);
             default:
                 return _container;
         }
@@ -109,6 +109,6 @@ class MBAi.Utils.String
 
     function replace(_string, _search, _replacement)
     {
-        return MBAi.Utils.Array.join(MBAi.Utils.String.split(_string, _search), _replacement);
+        return ::MBAi.Utils.Array.join(::MBAi.Utils.String.split(_string, _search), _replacement);
     }
 }

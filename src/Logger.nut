@@ -1,6 +1,7 @@
 class MBAi.Logger
 {
     static REPORT_LEVEL = 0;
+    static PRINT_TO_CONSOLE = false;
 
     static LEVEL = {
         DEBUG = 0
@@ -11,46 +12,64 @@ class MBAi.Logger
 
     function debug(_message, _context = {})
     {
-        MBAi.Logger.log(MBAi.Logger.LEVEL.DEBUG, _message, _context);
+        ::MBAi.Logger.log(::MBAi.Logger.LEVEL.DEBUG, _message, _context);
     }
 
     function info(_message, _context = {})
     {
-        MBAi.Logger.log(MBAi.Logger.LEVEL.INFO, _message, _context);
+        ::MBAi.Logger.log(::MBAi.Logger.LEVEL.INFO, _message, _context);
     }
 
     function warn(_message, _context = {})
     {
-        MBAi.Logger.log(MBAi.Logger.LEVEL.WARNING, _message, _context);
+        ::MBAi.Logger.log(::MBAi.Logger.LEVEL.WARNING, _message, _context);
     }
 
     function error(_message, _context = {})
     {
-        MBAi.Logger.log(MBAi.Logger.LEVEL.ERROR, _message, _context);
+        ::MBAi.Logger.log(::MBAi.Logger.LEVEL.ERROR, _message, _context);
     }
 
     function log(_level, _message, _context = {})
     {
-        if(MBAi.Logger.REPORT_LEVEL > _level){
+        if(::MBAi.Logger.REPORT_LEVEL > _level){
             return;
         }
 
-        local message = MBAi.Logger.processMessage(_message, _context);
+        local message = ::MBAi.Logger.processMessage(_message, _context);
         switch (_level) {
-            case MBAi.Logger.LEVEL.DEBUG:
-                AILog.Info("DEBUG: "+message);
+            case ::MBAi.Logger.LEVEL.DEBUG:
+                message = "DEBUG: "+message;
                 break;
-            case MBAi.Logger.LEVEL.INFO:
-                AILog.Info("INFO: "+message);
+            case ::MBAi.Logger.LEVEL.INFO:
+                message = "INFO: "+message;
                 break;
-            case MBAi.Logger.LEVEL.WARNING:
-                AILog.Warning("WARNING: "+message);
+            case ::MBAi.Logger.LEVEL.WARNING:
+                message = "WARNING: "+message;
                 break;
-            case MBAi.Logger.LEVEL.ERROR:
-                AILog.Error("ERROR: "+message);
+            case ::MBAi.Logger.LEVEL.ERROR:
+                message = "ERROR: "+message;
                 break;
             default:
                 throw "Unknown logger LEVEL "+_level+".";
+        }
+
+        if(::MBAi.Logger.PRINT_TO_CONSOLE){
+            ::print(message);
+        }
+        else{
+            switch (_level) {
+                case ::MBAi.Logger.LEVEL.DEBUG:
+                case ::MBAi.Logger.LEVEL.INFO:
+                    ::AILog.Info(message);
+                    break;
+                case ::MBAi.Logger.LEVEL.WARNING:
+                    ::AILog.Warning(message);
+                    break;
+                case ::MBAi.Logger.LEVEL.ERROR:
+                    ::AILog.Error(message);
+                    break;
+            }
         }
     }
 
@@ -60,10 +79,10 @@ class MBAi.Logger
         foreach (key, value in _context) {
             contextEmpty = false;
             local replacementKey = "{"+key+"}";
-            _message = MBAi.Utils.String.replace(_message, "{"+key+"}", ""+MBAi.Logger.convertToString(value));
+            _message = ::MBAi.Utils.String.replace(_message, "{"+key+"}", ""+::MBAi.Logger.convertToString(value));
         }
 
-        return _message + (!contextEmpty ? "  " + MBAi.Logger.convertToString(_context) : "");
+        return _message + (!contextEmpty ? "  " + ::MBAi.Logger.convertToString(_context) : "");
     }
 
     function convertToString(_data)
@@ -72,11 +91,11 @@ class MBAi.Logger
             case "table":
                 local values = [];
                 foreach(k, v in _data){
-                    values.push(k+": "+MBAi.Logger.convertToString(v));
+                    values.push(k+": "+::MBAi.Logger.convertToString(v));
                 }
-                return "{"+MBAi.Utils.Array.join(values, ", ")+"}";
+                return "{"+::MBAi.Utils.Array.join(values, ", ")+"}";
             case "array":
-                return "["+MBAi.Utils.Array.join(MBAi.Utils.Array.map(_data, MBAi.Logger.convertToString), ", ")+"]";
+                return "["+::MBAi.Utils.Array.join(::MBAi.Utils.Array.map(_data, ::MBAi.Logger.convertToString), ", ")+"]";
             case "bool":
                 return _data ? "true" : "false";
             case "integer":

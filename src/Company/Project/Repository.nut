@@ -1,12 +1,14 @@
-local DataStore = using("MBAi.Data.DataStore");
-local Project = using("MBAi.Company.Project.Project");
-local Utils = using("MBAi.Utils");
+using("MBAi.Data.DataStore");
+using("MBAi.Company.Project.Project");
+using("MBAi.Utils");
+using("MBAi.Logger");
 
 class MBAi.Company.Project.Repository
 {
-    static Project = Project;
-    static DataStore = DataStore;
-    static Utils = Utils;
+    static Project = ::MBAi.Company.Project.Project;
+    static DataStore = ::MBAi.Data.DataStore;
+    static Utils = ::MBAi.Utils;
+    static Logger = ::MBAi.Logger;
 
     function findById(_id)
     {
@@ -45,5 +47,27 @@ class MBAi.Company.Project.Repository
                 _project.__id = null;
             }, _project);
         }
+    }
+
+    function _nexti(_previousIndex)
+    {
+        local projectDataStore = DataStore.data.projects
+        local nextIndex = (_previousIndex != null ? _previousIndex + 1 : 0);
+        if(projectDataStore.id.len() > nextIndex){
+            return nextIndex;
+        }
+        return null;
+    }
+
+    function _get(_index)
+    {
+        local projectDataStore = DataStore.data.projects
+        if(typeof _index == "integer" && -1 < _index && _index < projectDataStore.id.len()){
+            local project = Project();
+            project.__id = projectDataStore.id[_index];
+            return project;
+        }
+
+        throw "Index not '"+_index+"' found.";
     }
 }
