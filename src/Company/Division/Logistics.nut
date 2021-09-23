@@ -1,19 +1,24 @@
-using("MBAi.Company.Divisions.Division");
+using("MBAi.Company.Division.Division");
 import("pathfinder.rail", "RailPathFinder", 1); // Wrap that
 
-class MBAi.Company.Divisions.Logistics extends MBAi.Company.Divisions.Division
+class MBAi.Company.Division.Logistics extends MBAi.Company.Division.Division
 {
     function getName()
     {
         return "logistics";
     }
 
-    function assignTasks()
+    function createTasksFromEvent(_event)
     {
 
     }
 
-    function carryOutTasks()
+    function createTasks()
+    {
+
+    }
+
+    function realiseTask(_task)
     {
 
     }

@@ -1,37 +1,42 @@
 using("MBAi.Data.Store");
 using("MBAi.Resource");
 using("MBAi.Utils");
+using("MBAi.Utils.Date");
+using("MBAi.Utils.Event");
 using("MBAi.Company.Project.Repository");
 using("MBAi.Company.Personnel.Repository");
-using("MBAi.Company.Divisions.Division")
-using("MBAi.Company.Divisions.Accounting");
-using("MBAi.Company.Divisions.Administration");
-using("MBAi.Company.Divisions.HumanResources");
-using("MBAi.Company.Divisions.Logistics");
-using("MBAi.Company.Divisions.Marketing");
-
+using("MBAi.Company.Task.Repository");
+using("MBAi.Company.Division.Division")
+using("MBAi.Company.Division.Accounting");
+using("MBAi.Company.Division.Administration");
+using("MBAi.Company.Division.HumanResources");
+using("MBAi.Company.Division.Logistics");
+using("MBAi.Company.Division.Marketing");
+using("MBAi.Logger");
 
 class MBAi.Company.Company {
-    projects = null
-    personnel = null
-    administration = null
-    logistics = null
-    accounting = null
-    hr = null
-    marketing = null
+    projects = null;
+    personnel = null;
+    tasks = null;
+
+    administration = null;
+    logistics = null;
+    accounting = null;
+    hr = null;
+    marketing = null;
 
     constructor()
     {
         this.projects = ::MBAi.Company.Project.Repository();
         this.personnel = ::MBAi.Company.Personnel.Repository();
+        this.tasks = ::MBAi.Company.Task.Repository();
 
         // Divisions
-        this.administration = ::MBAi.Company.Divisions.Administration(this);
-        this.logistics = ::MBAi.Company.Divisions.Logistics(this);
-        this.accounting = ::MBAi.Company.Divisions.Accounting(this);
-        this.hr = ::MBAi.Company.Divisions.HumanResources(this);
-        this.marketing = ::MBAi.Company.Divisions.Marketing(this);
-        this.setupCompany();
+        this.administration = ::MBAi.Company.Division.Administration(this);
+        this.logistics = ::MBAi.Company.Division.Logistics(this);
+        this.accounting = ::MBAi.Company.Division.Accounting(this);
+        this.hr = ::MBAi.Company.Division.HumanResources(this);
+        this.marketing = ::MBAi.Company.Division.Marketing(this);
     }
 
     function getId()
@@ -58,10 +63,8 @@ class MBAi.Company.Company {
     function setPresident(_personnel)
     {
         if(_personnel.id != null){
-            ::MBAi.Data.Store.transaction(function(_data):(_personnel){
-                _personnel.division = ::MBAi.Company.Divisions.Division.DIVISION_ANY;
-                _data.company.president = _personnel.id;
-            });
+            _personnel.division = ::MBAi.Company.Division.Division.DIVISION_ANY;
+            ::MBAi.Data.Store.data.company.president = _personnel.id;
             ::AICompany.SetPresidentGender(_personnel.gender);
             ::AICompany.SetPresidentName(_personnel.name);
         }
@@ -72,7 +75,7 @@ class MBAi.Company.Company {
         return [this.administration, this.logistics, this.accounting, this.hr, this.marketing];
     }
 
-    function setupCompany()
+    function setup()
     {
         // Setting company name
         local names = ::MBAi.Resource.loadResource("company.names");
@@ -95,5 +98,79 @@ class MBAi.Company.Company {
         }
 
         ::MBAi.Logger.info("Company info, divisions and personnel({personnelCount}) setup.", {personnelCount=this.personnel.count()});
+    }
+
+    lastDate = null;
+    function carryOutRoutine(_date)
+    {
+        while(::AIEventController.IsEventWaiting()){
+            local event = ::MBAi.Utils.Event.convert(::AIEventController.GetNextEvent());
+            ::MBAi.Logger.debug("Event type {type} fired.", {type=event.GetEventType()});
+            foreach (division in this.getDivisions()) {
+                division.createTasksFromEvent(event);
+            }
+        }
+
+        if(this.lastDate != null && _date <= this.lastDate){
+            return; // Daily ticks
+        }
+
+        local startOfYear = ::MBAi.Utils.Date.startOfYear(_date);
+        local startOfMonth = ::MBAi.Utils.Date.startOfMonth(_date);
+        if(this.lastDate != null && this.lastDate < startOfYear && _date >= startOfYear){
+            this.carryOutYearlyRoutine(startOfYear);
+        }
+
+        if(this.lastDate != null && this.lastDate < startOfMonth && _date >= startOfMonth){
+            this.carryOutMonthlyRoutine(startOfMonth);
+        }
+
+        this.carryOutDailyRoutine(_date);
+
+        this.lastDate = _date;
+    }
+
+    function carryOutDailyRoutine(_date)
+    {
+        ::MBAi.Logger.debug("Carrying out daily routine on {date}.", {date=::MBAi.Utils.Date.format(_date)});
+
+        foreach (division in this.getDivisions()) {
+            division.createTasks();
+        }
+
+        foreach (division in this.getDivisions()) {
+            division.assignTasks();
+        }
+
+        local jokerPersonnel = this.personnel.findBy(function(_person, _index, _personnel){
+            return _person.division == ::MBAi.Company.Division.Division.DIVISION_ANY
+                && ::MBAi.Utils.Array.indexOf(
+                    ::MBAi.Data.Store.data[::MBAi.Company.Task.Task.getStorageKey()].assignedPersonnel,
+                    _person.id
+            ) == -1;
+        });
+
+        while (jokerPersonnel.len() > 0) {
+            foreach (division in this.getDivisions()) {
+                if(jokerPersonnel.len() > 0){
+                    division.assignPersonnelToAnyTask(jokerPersonnel[0]);
+                    jokerPersonnel.remove(0);
+                }
+            }
+        }
+
+        foreach (division in this.getDivisions()) {
+            division.carryOutTasks();
+        }
+    }
+
+    function carryOutMonthlyRoutine(_date)
+    {
+        ::MBAi.Logger.debug("Carrying out monthly routine on {date}.", {date=::MBAi.Utils.Date.format(_date)});
+    }
+
+    function carryOutYearlyRoutine(_date)
+    {
+        ::MBAi.Logger.debug("Carrying out yearly routine on {date}.", {date=::MBAi.Utils.Date.format(_date)});
     }
 }

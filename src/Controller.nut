@@ -9,11 +9,18 @@ class MBAi.Controller extends AIController
 
     function Start()
     {
-        MBAi.Logger.info("MBAi Started.");
+        ::MBAi.Logger.info("MBAi Started.");
         local company = ::MBAi.Company.Company();
+        ::MBAi.Data.Store.transaction(function():(company){
+            company.setup();
+        });
+
+        local updateInTransaction = function():(company){
+            company.carryOutRoutine(::AIDate.GetCurrentDate());
+        };
 
         while (true) {
-
+            ::MBAi.Data.Store.transaction(updateInTransaction);
         }
     }
 

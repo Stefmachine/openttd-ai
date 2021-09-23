@@ -1,40 +1,49 @@
-using("MBAi.Company.Divisions.Division");
+using("MBAi.Company.Division.Division");
 using("MBAi.Company.Personnel.Personnel");
 using("MBAi.Resource");
+using("MBAi.Logger");
 
-class MBAi.Company.Divisions.HumanResources extends MBAi.Company.Divisions.Division
+class MBAi.Company.Division.HumanResources extends MBAi.Company.Division.Division
 {
     function getName()
     {
         return "hr";
     }
 
-    function assignTasks()
+    function createTasksFromEvent(_event)
     {
 
     }
 
-    function carryOutTasks()
+    function createTasks()
     {
 
     }
 
-    function hirePersonnel(_division = ::MBAi.Company.Divisions.Division.DIVISION_ANY)
+    function realiseTask(_task)
     {
 
-        local newPersonnel = ::MBAi.Company.Divisions.HumanResources.generatePersonnel();
+    }
+
+    function hirePersonnel(_division = ::MBAi.Company.Division.Division.DIVISION_ANY)
+    {
+
+        local newPersonnel = ::MBAi.Company.Division.HumanResources.generatePersonnel();
         this.company.personnel.add(newPersonnel);
         this.movePersonnel(newPersonnel, _division);
+
+        ::MBAi.Logger.debug("Hired {personnel}", {personnel=newPersonnel});
+
         return newPersonnel;
     }
 
     function movePersonnel(_personnel, _division)
     {
-        if(_division != ::MBAi.Company.Divisions.Division.DIVISION_ANY){
+        if(_division != ::MBAi.Company.Division.Division.DIVISION_ANY){
             _division.addPersonnel(_personnel);
         }
         else{
-            _personnel.division = ::MBAi.Company.Divisions.Division.DIVISION_ANY;
+            _personnel.division = ::MBAi.Company.Division.Division.DIVISION_ANY;
         }
     }
 
@@ -49,6 +58,7 @@ class MBAi.Company.Divisions.HumanResources extends MBAi.Company.Divisions.Divis
         local gender = [::AICompany.GENDER_MALE, ::AICompany.GENDER_FEMALE][::AIBase.RandRange(2)];
         local namePool = ::MBAi.Resource.loadResource("company.personnel");
         local name = namePool[gender][::AIBase.RandRange(namePool[gender].len())];
+        name += " " + namePool.lastNames[::AIBase.RandRange(namePool.lastNames.len())];
 
         local personnel = ::MBAi.Company.Personnel.Personnel();
         personnel.name = name;

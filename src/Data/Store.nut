@@ -2,6 +2,7 @@ using("MBAi.Utils");
 
 class MBAi.Data.Store
 {
+    static __buffer = null;
     static data = { // Never keep reference to data as it will be replaced often
         company = {
             name = null
@@ -33,9 +34,12 @@ class MBAi.Data.Store
         tasks = {
             id = []
             division = []
+            assignedPersonnel = []
+            type = []
+            info = []
             __meta = {
                 nextId = 1
-                columns = ["id", "division"]
+                columns = ["id", "division", "assignedPersonnel", "type", "info"]
             }
         }
     };
@@ -47,14 +51,23 @@ class MBAi.Data.Store
 
     function export()
     {
+        if(::MBAi.Data.Store.__buffer != null){
+            // Currently in a transaction export data before transaction
+            // because we don't want to save mid-operation data and cause corruption
+            return ::MBAi.Data.Store.__buffer;
+        }
+
         return ::MBAi.Data.Store.data;
     }
 
     function transaction(_function)
     {
-        local dataClone = ::MBAi.Utils.deepClone(::MBAi.Data.Store.data);
-        _function(dataClone);
-        ::AIController.Sleep(1);
-        ::MBAi.Data.Store.data <- dataClone;
+        local alreadyInTransaction = ::MBAi.Data.Store.__buffer != null;
+        ::MBAi.Data.Store.__buffer <- ::MBAi.Utils.deepClone(::MBAi.Data.Store.data);
+        _function();
+        if(!alreadyInTransaction){
+            ::AIController.Sleep(1); // Safest way to save is after a Sleep
+            ::MBAi.Data.Store.__buffer <- null;
+        }
     }
 }

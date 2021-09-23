@@ -1,3 +1,5 @@
+using("MBAi.Utils");
+
 class MBAi.Logger
 {
     static REPORT_LEVEL = 0;
@@ -79,36 +81,9 @@ class MBAi.Logger
         foreach (key, value in _context) {
             contextEmpty = false;
             local replacementKey = "{"+key+"}";
-            _message = ::MBAi.Utils.String.replace(_message, "{"+key+"}", ""+::MBAi.Logger.convertToString(value));
+            _message = ::MBAi.Utils.String.replace(_message, "{"+key+"}", ""+::MBAi.Utils.toDebugString(value));
         }
 
-        return _message + (!contextEmpty ? "  " + ::MBAi.Logger.convertToString(_context) : "");
-    }
-
-    function convertToString(_data)
-    {
-        switch(typeof(_data)){
-            case "table":
-                local values = [];
-                foreach(k, v in _data){
-                    values.push(k+": "+::MBAi.Logger.convertToString(v));
-                }
-                return "{"+::MBAi.Utils.Array.join(values, ", ")+"}";
-            case "array":
-                return "["+::MBAi.Utils.Array.join(::MBAi.Utils.Array.map(_data, function(_value, _index, _array){
-                     return ::MBAi.Logger.convertToString(_value);
-                }), ", ")+"]";
-            case "bool":
-                return _data ? "true" : "false";
-            case "integer":
-            case "float":
-                return ""+_data;
-            case "string":
-                return "\""+_data+"\"";
-            case "null":
-                return "null";
-            default:
-                return "_"+typeof _data+"_";
-        }
+        return _message;
     }
 }

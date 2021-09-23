@@ -56,26 +56,22 @@ class MBAi.Data.StorableRepository extends MBAi.Common.AbstractClass
     function add(_storable)
     {
         if(_storable instanceof (this.getStorableClass()) && _storable.id == null){
-            ::MBAi.Data.Store.transaction(function(_data):(_storable){
-                local id = _data[this.getStorageKey()].__meta.nextId++; // Increment ID after retrieving it
-                foreach (column in _data[this.getStorageKey()].__meta.columns) {
-                    _data[this.getStorageKey()][column].push(column == "id" ? id : _storable[column]);
-                }
-                _storable.__id = id;
-            });
+            local id = ::MBAi.Data.Store.data[this.getStorageKey()].__meta.nextId++; // Increment ID after retrieving it
+            foreach (column in ::MBAi.Data.Store.data[this.getStorageKey()].__meta.columns) {
+                ::MBAi.Data.Store.data[this.getStorageKey()][column].push(column == "id" ? id : _storable[column]);
+            }
+            _storable.__id = id;
         }
     }
 
     function remove(_storable)
     {
         if(_storable instanceof (this.getStorableClass()) && _storable.index > -1){
-            ::MBAi.Data.Store.transaction(function(_data):(_storable){
-                local index = _storable.index;
-                foreach (column in _data[this.getStorageKey()].__meta.columns) {
-                    _data[this.getStorageKey()][column].remove(index);
-                }
-                _storable.__id = null;
-            });
+            local index = _storable.index;
+            foreach (column in ::MBAi.Data.Store.data[this.getStorageKey()].__meta.columns) {
+                ::MBAi.Data.Store.data[this.getStorageKey()][column].remove(index);
+            }
+            _storable.__id = null;
         }
     }
 
