@@ -8,6 +8,7 @@ using("MBAi.Company.Divisions.Accounting");
 using("MBAi.Company.Divisions.Administration");
 using("MBAi.Company.Divisions.HumanResources");
 using("MBAi.Company.Divisions.Logistics");
+using("MBAi.Company.Divisions.Marketing");
 
 
 class MBAi.Company.Company {
@@ -17,6 +18,7 @@ class MBAi.Company.Company {
     logistics = null
     accounting = null
     hr = null
+    marketing = null
 
     constructor()
     {
@@ -28,6 +30,7 @@ class MBAi.Company.Company {
         this.logistics = ::MBAi.Company.Divisions.Logistics(this);
         this.accounting = ::MBAi.Company.Divisions.Accounting(this);
         this.hr = ::MBAi.Company.Divisions.HumanResources(this);
+        this.marketing = ::MBAi.Company.Divisions.Marketing(this);
         this.setupCompany();
     }
 
@@ -44,7 +47,7 @@ class MBAi.Company.Company {
     function setName(_name)
     {
         ::MBAi.Data.Store.data.company.name = _name;
-        return ::AICompany.SetName(_name)
+        return ::AICompany.GetName(this.getId()) == _name || ::AICompany.SetName(_name);
     }
 
     function getPresident()
@@ -54,14 +57,19 @@ class MBAi.Company.Company {
 
     function setPresident(_personnel)
     {
-        if(_personnel.id){
+        if(_personnel.id != null){
             ::MBAi.Data.Store.transaction(function(_data):(_personnel){
                 _personnel.division = ::MBAi.Company.Divisions.Division.DIVISION_ANY;
-                ::MBAi.Data.Store.data.company.president = _personnel.id;
+                _data.company.president = _personnel.id;
             });
             ::AICompany.SetPresidentGender(_personnel.gender);
             ::AICompany.SetPresidentName(_personnel.name);
         }
+    }
+
+    function getDivisions()
+    {
+        return [this.administration, this.logistics, this.accounting, this.hr, this.marketing];
     }
 
     function setupCompany()
@@ -76,20 +84,16 @@ class MBAi.Company.Company {
         }
 
         if(this.getPresident() == null){
-            local newPresident = ::MBAi.Company.Personnel.generate();
-            this.personnel.add(newPresident);
+            local newPresident = this.hr.hirePersonnel();
             this.setPresident(newPresident);
         }
 
-        local divisions = [this.administration, this.logistics, this.accounting, this.hr];
-        foreach (division in divisions) {
+        foreach (division in this.getDivisions()) {
             if(division.getPersonnel().len() == 0){
-                local newPersonnel = ::MBAi.Company.Personnel.generate();
-                this.personnel.add(newPersonnel);
-                division.addPersonnel(newPersonnel);
+                this.hr.hirePersonnel(division);
             }
         }
 
-        ::MBAi.Logger.info("Company info, divisions and personnel setup.");
+        ::MBAi.Logger.info("Company info, divisions and personnel({personnelCount}) setup.", {personnelCount=this.personnel.count()});
     }
 }

@@ -1,5 +1,5 @@
 using("MBAi.Data.Storable");
-using("MBAi.Company.Divisions.Division")
+using("MBAi.Company.Divisions.Division");
 
 class MBAi.Company.Personnel.Personnel extends MBAi.Data.Storable
 {
@@ -19,16 +19,4 @@ class MBAi.Company.Personnel.Personnel extends MBAi.Data.Storable
     {
         return "personnel";
     }
-}
-
-MBAi.Company.Personnel.generate <- function(){
-    local gender = [::AICompany.GENDER_MALE, ::AICompany.GENDER_FEMALE][::AIBase.RandRange(2)];
-    local namePool = ::MBAi.Resource.loadResource("company.personnel");
-    local name = namePool[gender][::AIBase.RandRange(namePool[gender].len())];
-
-    local personnel = ::MBAi.Company.Personnel.Personnel();
-    personnel.name = name;
-    personnel.gender = gender;
-
-    return personnel;
 }

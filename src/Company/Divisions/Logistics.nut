@@ -8,6 +8,16 @@ class MBAi.Company.Divisions.Logistics extends MBAi.Company.Divisions.Division
         return "logistics";
     }
 
+    function assignTasks()
+    {
+
+    }
+
+    function carryOutTasks()
+    {
+
+    }
+
     function evaluateProject(_project)
     {
         foreach(destination in destinations) {

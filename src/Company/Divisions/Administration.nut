@@ -6,4 +6,14 @@ class MBAi.Company.Divisions.Administration extends MBAi.Company.Divisions.Divis
     {
         return "admin";
     }
+
+    function assignTasks()
+    {
+
+    }
+
+    function carryOutTasks()
+    {
+
+    }
 }

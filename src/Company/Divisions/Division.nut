@@ -11,12 +11,14 @@ class MBAi.Company.Divisions.Division extends MBAi.Common.AbstractClass
     {
         this.company = _company;
         this.ensureSlotImplementation("getName", "MBAi.Company.Divisions.Division");
+        this.ensureSlotImplementation("assignTasks", "MBAi.Company.Divisions.Division");
+        this.ensureSlotImplementation("carryOutTasks", "MBAi.Company.Divisions.Division");
     }
 
     function getPersonnel()
     {
         return MBAi.Utils.Array.filter(this.company.personnel.toArray(), function(_person, _index, _personnel){
-            return _person.division == this.getName() || _person.division == ::MBAi.Company.Divisions.Division.DIVISION_ANY;
+            return _person.division == this.getName();
         });
     }
 

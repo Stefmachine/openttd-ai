@@ -29,6 +29,15 @@ class MBAi.Data.Store
                 columns = ["id", "name", "gender", "division"]
             }
         }
+
+        tasks = {
+            id = []
+            division = []
+            __meta = {
+                nextId = 1
+                columns = ["id", "division"]
+            }
+        }
     };
 
     function import(_version, _data)

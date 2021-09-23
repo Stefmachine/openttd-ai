@@ -6,4 +6,14 @@ class MBAi.Company.Divisions.Accounting extends MBAi.Company.Divisions.Division
     {
         return "accounting";
     }
+
+    function assignTasks()
+    {
+
+    }
+
+    function carryOutTasks()
+    {
+
+    }
 }
