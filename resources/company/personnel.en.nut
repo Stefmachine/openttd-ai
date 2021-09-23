@@ -1,5 +1,5 @@
-MBAi.Resource.company.president_names =  {
-    [AICompany.GENDER_FEMALE] = [
+MBAi.Resource.company.personnel =  {
+    [::AICompany.GENDER_FEMALE] = [
         "Phyliss Whittenberg",
         "Jenae Cumberbatch",
         "Janeen Ackerman",
@@ -51,7 +51,7 @@ MBAi.Resource.company.president_names =  {
         "Phylicia Bufkin",
         "Retha Hockaday"
     ],
-    [AICompany.GENDER_MALE] = [
+    [::AICompany.GENDER_MALE] = [
         "Howard Halley",
         "Carlton Andress",
         "Ariel Yunker",

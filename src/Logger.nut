@@ -95,7 +95,9 @@ class MBAi.Logger
                 }
                 return "{"+::MBAi.Utils.Array.join(values, ", ")+"}";
             case "array":
-                return "["+::MBAi.Utils.Array.join(::MBAi.Utils.Array.map(_data, ::MBAi.Logger.convertToString), ", ")+"]";
+                return "["+::MBAi.Utils.Array.join(::MBAi.Utils.Array.map(_data, function(_value, _index, _array){
+                     return ::MBAi.Logger.convertToString(_value);
+                }), ", ")+"]";
             case "bool":
                 return _data ? "true" : "false";
             case "integer":

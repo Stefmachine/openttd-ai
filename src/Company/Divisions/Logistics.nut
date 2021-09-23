@@ -1,8 +1,11 @@
-import("pathfinder.rail", "RailPathFinder", 1);
+using("MBAi.Company.Divisions.Division");
+import("pathfinder.rail", "RailPathFinder", 1); // Wrap that
 
-class MBAi.Company.Divisions.Logistics
+class MBAi.Company.Divisions.Logistics extends MBAi.Company.Divisions.Division
 {
-    constructor(){
+    function getName()
+    {
+        return "logistics";
     }
 
     function evaluateProject(_project)

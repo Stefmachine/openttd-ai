@@ -10,7 +10,9 @@ class MBAi.Utils
                 }
                 return result;
             case "array":
-                return ::MBAi.Utils.Array.map(_container, ::MBAi.Utils.deepClone);
+                return ::MBAi.Utils.Array.map(_container, function(_value, _index, _array){
+                    return ::MBAi.Utils.deepClone(_value);
+                });
             default:
                 return _container;
         }
@@ -47,30 +49,22 @@ class MBAi.Utils.Array
     {
         local mapped = [];
         foreach (index, value in _array) {
-            mapped.push(_mapFunction(value));
-        }
-
-        return mapped;
-    }
-
-    function mapi(_array, _mapFunction)
-    {
-        local mapped = [];
-        foreach (index, value in _array) {
-            mapped.push(_mapFunction(value, index));
-        }
-
-        return mapped;
-    }
-
-    function mapia(_array, _mapFunction)
-    {
-        local mapped = [];
-        foreach (index, value in _array) {
             mapped.push(_mapFunction(value, index, _array));
         }
 
         return mapped;
+    }
+
+    function filter(_array, _filterFunction)
+    {
+        local filtered = [];
+        foreach (index, value in _array) {
+            if(_filterFunction(value, index, _array)){
+                filtered.push(value);
+            }
+        }
+
+        return filtered;
     }
 }
 
