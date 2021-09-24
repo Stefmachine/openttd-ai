@@ -14,7 +14,7 @@ class MBAi.Company.Division.Division extends MBAi.Common.AbstractClass
         this.ensureSlotImplementation("getName", "MBAi.Company.Division.Division");
         this.ensureSlotImplementation("createTasksFromEvent", "MBAi.Company.Division.Division");
         this.ensureSlotImplementation("createTasks", "MBAi.Company.Division.Division");
-        this.ensureSlotImplementation("realiseTask", "MBAi.Company.Division.Division");
+        this.ensureSlotImplementation("performTask", "MBAi.Company.Division.Division");
     }
 
     function getPersonnel()
@@ -72,7 +72,7 @@ class MBAi.Company.Division.Division extends MBAi.Common.AbstractClass
     function getFreePersonnel()
     {
         return ::MBAi.Utils.Array.filter(this.getPersonnel(), function(_person, _index, _personnel){
-            return this.getPersonnelTask(_person) != null;
+            return this.getPersonnelTask(_person) == null;
         });
     }
 
@@ -105,15 +105,26 @@ class MBAi.Company.Division.Division extends MBAi.Common.AbstractClass
     {
         local tasks = this.getPrioritisedUnassignedTasks();
         if(tasks.len() > 0){
-            tasks[0].assignTo(personnel);
+            local task = tasks[0];
+            task.assignTo(_personnel);
+            ::MBAi.Logger.debug("Assigned task '{type}(#{tid})' of {division} division to {name}(#{pid}).", {
+                type = task.type,
+                tid = task.id,
+                division = task.division,
+                name = _personnel.name,
+                pid = _personnel.id
+            });
+            return true;
         }
+
+        return false;
     }
 
     function carryOutTasks()
     {
         foreach (task in this.getTasks()) {
             if(task.assignedPersonnel != null){
-                this.realiseTask(task);
+                this.performTask(task);
             }
         }
     }

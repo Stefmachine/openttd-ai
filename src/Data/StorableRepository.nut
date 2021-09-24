@@ -34,7 +34,7 @@ class MBAi.Data.StorableRepository extends MBAi.Common.AbstractClass
 
     function findOneBy(_filterFunction, _sortFunction = null)
     {
-        local array = this.findBy(_filterFunction);
+        local array = this.findBy(_filterFunction,_sortFunction);
         return array.len() > 0 ? array[0] : null;
     }
 

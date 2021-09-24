@@ -17,7 +17,7 @@ class MBAi.Company.Division.Administration extends MBAi.Company.Division.Divisio
 
     }
 
-    function realiseTask(_task)
+    function performTask(_task)
     {
 
     }

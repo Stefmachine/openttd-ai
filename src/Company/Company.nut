@@ -142,25 +142,34 @@ class MBAi.Company.Company {
             division.assignTasks();
         }
 
+        this.assignTasksToJokerPersonnel();
+
+        foreach (division in this.getDivisions()) {
+            division.carryOutTasks();
+        }
+    }
+
+    function assignTasksToJokerPersonnel()
+    {
         local jokerPersonnel = this.personnel.findBy(function(_person, _index, _personnel){
             return _person.division == ::MBAi.Company.Division.Division.DIVISION_ANY
                 && ::MBAi.Utils.Array.indexOf(
                     ::MBAi.Data.Store.data[::MBAi.Company.Task.Task.getStorageKey()].assignedPersonnel,
                     _person.id
-            ) == -1;
+                ) == -1;
         });
 
-        while (jokerPersonnel.len() > 0) {
+        local anyDivisionWithTasks = true;
+        while (jokerPersonnel.len() > 0 && anyDivisionWithTasks) {
+            anyDivisionWithTasks = false;
             foreach (division in this.getDivisions()) {
                 if(jokerPersonnel.len() > 0){
-                    division.assignPersonnelToAnyTask(jokerPersonnel[0]);
-                    jokerPersonnel.remove(0);
+                    if(division.assignPersonnelToAnyTask(jokerPersonnel[0])){
+                        jokerPersonnel.remove(0);
+                        anyDivisionWithTasks = true;
+                    }
                 }
             }
-        }
-
-        foreach (division in this.getDivisions()) {
-            division.carryOutTasks();
         }
     }
 

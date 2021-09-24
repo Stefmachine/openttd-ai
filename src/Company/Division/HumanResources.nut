@@ -20,7 +20,7 @@ class MBAi.Company.Division.HumanResources extends MBAi.Company.Division.Divisio
 
     }
 
-    function realiseTask(_task)
+    function performTask(_task)
     {
 
     }

@@ -18,7 +18,7 @@ class MBAi.Company.Division.Logistics extends MBAi.Company.Division.Division
 
     }
 
-    function realiseTask(_task)
+    function performTask(_task)
     {
 
     }

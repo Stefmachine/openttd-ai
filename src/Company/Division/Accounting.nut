@@ -17,7 +17,7 @@ class MBAi.Company.Division.Accounting extends MBAi.Company.Division.Division
 
     }
 
-    function realiseTask(_task)
+    function performTask(_task)
     {
 
     }
