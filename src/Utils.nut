@@ -218,17 +218,16 @@ class MBAi.Utils.Event
                 [::AIEvent.ET_EXCLUSIVE_TRANSPORT_RIGHTS] = ::AIEventExclusiveTransportRights,
                 [::AIEvent.ET_ROAD_RECONSTRUCTION] = ::AIEventRoadReconstruction,
                 [::AIEvent.ET_VEHICLE_AUTOREPLACED] = ::AIEventVehicleAutoReplaced,
-            }
+            };
         }
 
-        return (type in ::MBAi.Utils.Event.EVENT_CLASSES) ? ::MBAi.Utils.Event.EVENT_CLASSES[_type] : null;
+        return (_type in ::MBAi.Utils.Event.EVENT_CLASSES) ? ::MBAi.Utils.Event.EVENT_CLASSES[_type] : null;
     }
 
     function convert(_event)
     {
         if(_event instanceof ::AIEvent){
-            local type = _event.GetEventType();
-            local convertClass = ::MBAi.Utils.Event.getEventClass(type);
+            local convertClass = ::MBAi.Utils.Event.getEventClass(_event.GetEventType());
             if(convertClass != null){
                 _event = convertClass.Convert(_event);
             }
@@ -236,7 +235,7 @@ class MBAi.Utils.Event
             return _event;
         }
 
-        MBAI.Logger.error("Event convertion expected valid event type.", {type = type})
+        MBAi.Logger.error("Event convertion expected valid event type.", {type = type})
         return null;
     }
 }
