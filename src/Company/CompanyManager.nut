@@ -3,6 +3,7 @@ using("MBAi.Resource");
 using("MBAi.Utils");
 using("MBAi.Utils.Date");
 using("MBAi.Utils.Event");
+using("MBAi.World.CurrentCompany");
 using("MBAi.Company.Project.Repository");
 using("MBAi.Company.Personnel.Repository");
 using("MBAi.Company.Task.Repository");
@@ -14,7 +15,9 @@ using("MBAi.Company.Division.Logistics");
 using("MBAi.Company.Division.Marketing");
 using("MBAi.Logger");
 
-class MBAi.Company.Company {
+class MBAi.Company.CompanyManager
+{
+    company = null;
     projects = null;
     personnel = null;
     tasks = null;
@@ -27,6 +30,7 @@ class MBAi.Company.Company {
 
     constructor()
     {
+        this.company = ::MBAi.World.CurrentCompany();
         this.projects = ::MBAi.Company.Project.Repository();
         this.personnel = ::MBAi.Company.Personnel.Repository();
         this.tasks = ::MBAi.Company.Task.Repository();
@@ -39,11 +43,6 @@ class MBAi.Company.Company {
         this.marketing = ::MBAi.Company.Division.Marketing(this);
     }
 
-    function getId()
-    {
-        return ::AICompany.COMPANY_SELF;
-    }
-
     function getName()
     {
         return ::MBAi.Data.Store.data.company.name;
@@ -52,7 +51,7 @@ class MBAi.Company.Company {
     function setName(_name)
     {
         ::MBAi.Data.Store.data.company.name = _name;
-        return ::AICompany.GetName(this.getId()) == _name || ::AICompany.SetName(_name);
+        return this.company.getName() == _name || this.company.setName(_name);
     }
 
     function getPresident()
@@ -65,8 +64,8 @@ class MBAi.Company.Company {
         if(_personnel.id != null){
             _personnel.division = ::MBAi.Company.Division.Division.DIVISION_ANY;
             ::MBAi.Data.Store.data.company.president = _personnel.id;
-            ::AICompany.SetPresidentGender(_personnel.gender);
-            ::AICompany.SetPresidentName(_personnel.name);
+            this.company.setPresidentGender(_personnel.gender);
+            this.company.setPresidentName(_personnel.name);
         }
     }
 
@@ -96,8 +95,6 @@ class MBAi.Company.Company {
                 this.hr.hirePersonnel(division);
             }
         }
-
-        ::MBAi.Logger.info("Company info, divisions and personnel({personnelCount}) setup.", {personnelCount=this.personnel.count()});
     }
 
     lastDate = null;

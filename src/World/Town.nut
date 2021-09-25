@@ -1,4 +1,5 @@
 using("MBAi.World.Abstract.Model");
+using("MBAi.World.Abstract.ModelRepository");
 using("MBAi.World.Company");
 
 class MBAi.World.Town extends MBAi.World.Abstract.Model
@@ -38,29 +39,31 @@ class MBAi.World.Town extends MBAi.World.Abstract.Model
         return this.isValid() ? this.getApi().GetLocation(this.id) : ::AIMap.TILE_INVALID;
     }
 
-    function getLastMonthProduction(_cargoId)
+    function getLastMonthProduction(_cargo)
     {
-        return this.isValid() ? this.getApi().GetLastMonthProduction(this.id, _cargoId) : 0;
+        return this.isValid() && _cargo.isValid() ? this.getApi().GetLastMonthProduction(this.id, _cargo.id) : 0;
     }
 
-    function getLastMonthSupplied(_cargoId)
+    function getLastMonthSupplied(_cargo)
     {
-        return this.isValid() ? this.getApi().GetLastMonthSupplied(this.id, _cargoId) : 0;
+        return this.isValid() && _cargo.isValid() ? this.getApi().GetLastMonthSupplied(this.id, _cargo.id) : 0;
     }
 
-    function getLastMonthTransportedPercentage(_cargoId)
+    function getLastMonthTransportedPercentage(_cargo)
     {
-        return this.isValid() ? this.getApi().GetLastMonthTransportedPercentage(this.id, _cargoId) : 0;
+        return this.isValid() && _cargo.isValid() ? this.getApi().GetLastMonthTransportedPercentage(this.id, _cargo.id) : 0;
     }
 
     function getLastMonthReceived(_cargoTownEffect)
     {
-        return this.isValid() ? this.getApi().GetLastMonthReceived(this.id, _cargoTownEffect) : 0;
+        return this.isValid() && ::MBAi.World.Cargo.isValidTownEffect(_cargoTownEffect)
+            ? this.getApi().GetLastMonthReceived(this.id, _cargoTownEffect) : 0;
     }
 
     function getCargoGoal(_cargoTownEffect)
     {
-        return this.isValid() ? this.getApi().GetCargoGoal(this.id, _cargoTownEffect) : 0;
+        return this.isValid() && ::MBAi.World.Cargo.isValidTownEffect(_cargoTownEffect)
+            ? this.getApi().GetCargoGoal(this.id, _cargoTownEffect) : 0;
     }
 
     function getGrowthRate()

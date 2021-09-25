@@ -1,5 +1,5 @@
-using("MBAi.World.Abstract.ModelRepository");
 using("MBAi.World.Abstract.Model");
+using("MBAi.World.Abstract.ModelRepository");
 using("MBAi.World.ModelFactory");
 using("MBAi.World.Town");
 using("MBAi.World.Company");

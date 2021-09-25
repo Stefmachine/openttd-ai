@@ -1,16 +1,13 @@
 using("MBAi.Data.Store");
-using("MBAi.Company.Company");
-using("MBAi.Company.Project.Project");
+using("MBAi.Company.CompanyManager");
 using("MBAi.Logger");
 
 class MBAi.Controller extends AIController
 {
-    static Project = MBAi.Company.Project.Project;
-
     function Start()
     {
         ::MBAi.Logger.info("MBAi Started.");
-        local company = ::MBAi.Company.Company();
+        local company = ::MBAi.Company.CompanyManager();
         ::MBAi.Data.Store.transaction(function():(company){
             company.setup();
         });

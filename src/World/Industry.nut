@@ -1,4 +1,6 @@
 using("MBAi.World.Abstract.Model");
+using("MBAi.World.Abstract.ModelRepository");
+using("MBAi.World.Company");
 
 class MBAi.World.Industry extends MBAi.World.Abstract.Model
 {
@@ -24,7 +26,12 @@ class MBAi.World.Industry extends MBAi.World.Abstract.Model
 
     function isCargoAccepted(_cargo)
     {
-        return this.isValid() && _cargo.isValid() ? this.getApi().IsCargoAccepted(_cargo.id) : false;
+        return this.isValid() && _cargo.isValid() ? this.getApi().IsCargoAccepted(_cargo.id) == this.getApi().CAS_ACCEPTED : false;
+    }
+
+    function isTemporarlyRefused(_cargo)
+    {
+        return this.isValid() && _cargo.isValid() ? this.getApi().IsCargoAccepted(_cargo.id) == this.getApi().CAS_TEMP_REFUSED : false;
     }
 
     function getStockpiledCargo(_cargo)
@@ -135,4 +142,7 @@ class MBAi.World.Industry.Repository extends MBAi.World.Abstract.ModelRepository
     {
         return ::AIIndustryList;
     }
+
+    // AIIndustryList_CargoAccepting > Creates a list of industries that accepts a given cargo
+    // AIIndustryList_CargoProducing > Creates a list of industries that can produce a given cargo
 }
