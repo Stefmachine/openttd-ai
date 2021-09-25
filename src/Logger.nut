@@ -2,8 +2,9 @@ using("MBAi.Utils");
 
 class MBAi.Logger
 {
+    //static REPORT_LEVEL = (::AIController.GetSetting("LogDebug") == 0 ? 1 : 0);
     static REPORT_LEVEL = 0;
-    static PRINT_TO_CONSOLE = false;
+    static PRINT_TO_CONSOLE = ::AIController.GetSetting("UsePrint") == 1;
 
     static LEVEL = {
         DEBUG = 0

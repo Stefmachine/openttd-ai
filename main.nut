@@ -1,3 +1,5 @@
 require("autoload.nut");
 
-__MBAiController <- using("MBAi.Controller");
+using("MBAi.Controller");
+
+__MBAiController <- ::MBAi.Controller;

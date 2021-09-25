@@ -189,39 +189,46 @@ class MBAi.Utils.Date
 
 class MBAi.Utils.Event
 {
-    static EVENT_CLASSES = {
-        [::AIEvent.ET_SUBSIDY_OFFER] = ::AIEventSubsidyOffer,
-        [::AIEvent.ET_SUBSIDY_OFFER_EXPIRED] = ::AIEventSubsidyOfferExpired,
-        [::AIEvent.ET_SUBSIDY_AWARDED] = ::AIEventSubsidyAwarded,
-        [::AIEvent.ET_SUBSIDY_EXPIRED] = ::AIEventSubsidyExpired,
-        [::AIEvent.ET_ENGINE_PREVIEW] = ::AIEventEnginePreview,
-        [::AIEvent.ET_COMPANY_NEW] = ::AIEventCompanyNew,
-        [::AIEvent.ET_COMPANY_IN_TROUBLE] = ::AIEventCompanyInTrouble,
-        [::AIEvent.ET_COMPANY_ASK_MERGER] = ::AIEventCompanyAskMerger,
-        [::AIEvent.ET_COMPANY_MERGER] = ::AIEventCompanyMerger,
-        [::AIEvent.ET_COMPANY_BANKRUPT] = ::AIEventCompanyBankrupt,
-        [::AIEvent.ET_VEHICLE_CRASHED] = ::AIEventVehicleCrashed,
-        [::AIEvent.ET_VEHICLE_LOST] = ::AIEventVehicleLost,
-        [::AIEvent.ET_VEHICLE_WAITING_IN_DEPOT] = ::AIEventVehicleWaitingInDepot,
-        [::AIEvent.ET_VEHICLE_UNPROFITABLE] = ::AIEventVehicleUnprofitable,
-        [::AIEvent.ET_INDUSTRY_OPEN] = ::AIEventIndustryOpen,
-        [::AIEvent.ET_INDUSTRY_CLOSE] = ::AIEventIndustryClose,
-        [::AIEvent.ET_ENGINE_AVAILABLE] = ::AIEventEngineAvailable,
-        [::AIEvent.ET_STATION_FIRST_VEHICLE] = ::AIEventStationFirstVehicle,
-        [::AIEvent.ET_DISASTER_ZEPPELINER_CRASHED] = ::AIEventDisasterZeppelinerCrashed,
-        [::AIEvent.ET_DISASTER_ZEPPELINER_CLEARED] = ::AIEventDisasterZeppelinerCleared,
-        [::AIEvent.ET_TOWN_FOUNDED] = ::AIEventTownFounded,
-        [::AIEvent.ET_AIRCRAFT_DEST_TOO_FAR] = ::AIEventAircraftDestTooFar,
-        [::AIEvent.ET_EXCLUSIVE_TRANSPORT_RIGHTS] = ::AIEventExclusiveTransportRights,
-        [::AIEvent.ET_ROAD_RECONSTRUCTION] = ::AIEventRoadReconstruction,
-        [::AIEvent.ET_VEHICLE_AUTOREPLACED] = ::AIEventVehicleAutoReplaced,
-    };
+    function getEventClass(_type)
+    {
+        if(!("EVENT_CLASSES" in ::MBAi.Utils.Event)){
+            ::MBAi.Utils.Event.EVENT_CLASSES <- {
+                [::AIEvent.ET_SUBSIDY_OFFER] = ::AIEventSubsidyOffer,
+                [::AIEvent.ET_SUBSIDY_OFFER_EXPIRED] = ::AIEventSubsidyOfferExpired,
+                [::AIEvent.ET_SUBSIDY_AWARDED] = ::AIEventSubsidyAwarded,
+                [::AIEvent.ET_SUBSIDY_EXPIRED] = ::AIEventSubsidyExpired,
+                [::AIEvent.ET_ENGINE_PREVIEW] = ::AIEventEnginePreview,
+                [::AIEvent.ET_COMPANY_NEW] = ::AIEventCompanyNew,
+                [::AIEvent.ET_COMPANY_IN_TROUBLE] = ::AIEventCompanyInTrouble,
+                [::AIEvent.ET_COMPANY_ASK_MERGER] = ::AIEventCompanyAskMerger,
+                [::AIEvent.ET_COMPANY_MERGER] = ::AIEventCompanyMerger,
+                [::AIEvent.ET_COMPANY_BANKRUPT] = ::AIEventCompanyBankrupt,
+                [::AIEvent.ET_VEHICLE_CRASHED] = ::AIEventVehicleCrashed,
+                [::AIEvent.ET_VEHICLE_LOST] = ::AIEventVehicleLost,
+                [::AIEvent.ET_VEHICLE_WAITING_IN_DEPOT] = ::AIEventVehicleWaitingInDepot,
+                [::AIEvent.ET_VEHICLE_UNPROFITABLE] = ::AIEventVehicleUnprofitable,
+                [::AIEvent.ET_INDUSTRY_OPEN] = ::AIEventIndustryOpen,
+                [::AIEvent.ET_INDUSTRY_CLOSE] = ::AIEventIndustryClose,
+                [::AIEvent.ET_ENGINE_AVAILABLE] = ::AIEventEngineAvailable,
+                [::AIEvent.ET_STATION_FIRST_VEHICLE] = ::AIEventStationFirstVehicle,
+                [::AIEvent.ET_DISASTER_ZEPPELINER_CRASHED] = ::AIEventDisasterZeppelinerCrashed,
+                [::AIEvent.ET_DISASTER_ZEPPELINER_CLEARED] = ::AIEventDisasterZeppelinerCleared,
+                [::AIEvent.ET_TOWN_FOUNDED] = ::AIEventTownFounded,
+                [::AIEvent.ET_AIRCRAFT_DEST_TOO_FAR] = ::AIEventAircraftDestTooFar,
+                [::AIEvent.ET_EXCLUSIVE_TRANSPORT_RIGHTS] = ::AIEventExclusiveTransportRights,
+                [::AIEvent.ET_ROAD_RECONSTRUCTION] = ::AIEventRoadReconstruction,
+                [::AIEvent.ET_VEHICLE_AUTOREPLACED] = ::AIEventVehicleAutoReplaced,
+            }
+        }
+
+        return (type in ::MBAi.Utils.Event.EVENT_CLASSES) ? ::MBAi.Utils.Event.EVENT_CLASSES[_type] : null;
+    }
 
     function convert(_event)
     {
         if(_event instanceof ::AIEvent){
             local type = _event.GetEventType();
-            local convertClass = (type in ::MBAi.Utils.Event.EVENT_CLASSES) ? ::MBAi.Utils.Event.EVENT_CLASSES[type] : null;
+            local convertClass = ::MBAi.Utils.Event.getEventClass(type);
             if(convertClass != null){
                 _event = convertClass.Convert(_event);
             }

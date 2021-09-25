@@ -9,7 +9,7 @@ class MBAi.Data.StorableRepository extends MBAi.Common.AbstractClass
     {
         this.ensureSlotImplementation("getStorableClass", "MBAi.Data.StorableRepository");
         if(!(this.getStorableClass().instance() instanceof ::MBAi.Data.Storable)){
-            throw "StorableRepository must return class extending Storable.";
+            throw "'getStorableClass' must return class extending MBAi.Data.Storable.";
         }
     }
 

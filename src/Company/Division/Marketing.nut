@@ -1,4 +1,6 @@
 using("MBAi.Company.Division.Division");
+using("MBAi.World.Subsidy");
+using("MBAi.Company.Task.Failure");
 
 class MBAi.Company.Division.Marketing extends MBAi.Company.Division.Division
 {
@@ -35,34 +37,34 @@ class MBAi.Company.Division.Marketing extends MBAi.Company.Division.Division
 
     }
 
-    function performTask(_task)
+    function getTasksOperations()
     {
-        if(_task.type == ::MBAi.Company.Division.Makerting.TASK_MAKE_SUBSIDY_PROJECT){
-            if(::AISubsidy.IsValidSubsidy(_task.info.subsidyId) && !::AISubsidy.IsAwarded(_task.info.subsidyId)){
-                local project = MBAi.Company.Project.Project();
-                switch(::AISubsidy.GetSourceType()){
-                    case ::AISubsidy.SPT_TOWN:
-                        project.addTownTarget(::AISubsidy.GetSourceIndex(_task.info.subsidyId));
-                        break;
-                    case ::AISubsidy.SPT_INDUSTRY:
-                        project.addIndustryTarget(::AISubsidy.GetSourceIndex(_task.info.subsidyId));
-                        break;
-                }
+        local executionTasks = {};
+        executionTasks[::MBAi.Company.Division.Marketing.TASK_MAKE_SUBSIDY_PROJECT] <- this.performMakeSubsidyProjectTask;
+        return executionTasks;
+    }
 
-                switch(::AISubsidy.GetDestinationType()){
-                    case ::AISubsidy.SPT_TOWN:
-                        project.addTownTarget(::AISubsidy.GetDestinationIndex(_task.info.subsidyId));
-                        break;
-                    case ::AISubsidy.SPT_INDUSTRY:
-                        project.addIndustryTarget(::AISubsidy.GetDestinationIndex(_task.info.subsidyId));
-                        break;
-                }
+    function performMakeSubsidyProjectTask(_task)
+    {
+        local subsidy = ::MBAi.World.Subsidy(_task.info.subsidyId);
+        if(subsidy.isValid() && !subsidy.isAwarded()){
+            local source = subsidy.getSource();
+            local destination = subsidy.getDestination();
+
+            if(source.isValid() && destination.isValid()){
+                local project = ::MBAi.Company.Project.Project();
+                project.addTarget(source);
+                project.addTarget(destination);
 
                 this.company.projects.add(project);
+                ::MBAi.Logger.debug("Created project(#{pid}) from subsidy(#{sid}).", {pid = project.id, sid = subsidy.id});
+
+                return project;
             }
 
-            this.company.tasks.remove(_task);
+            throw ::MBAi.Company.Task.Failure("Failed to create project from subsidy(#{sid}) as the source and/or destination is invalid.", {sid = subsidy.id});
         }
 
+        throw ::MBAi.Company.Task.Failure("Failed to create project from subsidy(#{sid}) as the subsidy is invalid or already awarded.", {sid = subsidy.id});
     }
 }

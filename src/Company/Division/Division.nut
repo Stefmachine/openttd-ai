@@ -7,6 +7,7 @@ class MBAi.Company.Division.Division extends MBAi.Common.AbstractClass
     static DIVISION_ANY = "*";
 
     company = null
+    TASKS_OPERATIONS = {}
 
     constructor(_company)
     {
@@ -14,7 +15,8 @@ class MBAi.Company.Division.Division extends MBAi.Common.AbstractClass
         this.ensureSlotImplementation("getName", "MBAi.Company.Division.Division");
         this.ensureSlotImplementation("createTasksFromEvent", "MBAi.Company.Division.Division");
         this.ensureSlotImplementation("createTasks", "MBAi.Company.Division.Division");
-        this.ensureSlotImplementation("performTask", "MBAi.Company.Division.Division");
+        this.ensureSlotImplementation("getTasksOperations", "MBAi.Company.Division.Division");
+        this.TASKS_OPERATIONS = this.getTasksOperations();
     }
 
     function getPersonnel()
@@ -127,5 +129,24 @@ class MBAi.Company.Division.Division extends MBAi.Common.AbstractClass
                 this.performTask(task);
             }
         }
+    }
+
+    function performTask(_task)
+    {
+        if(_task.type in this.TASKS_OPERATIONS){
+            try {
+                this.TASKS_OPERATIONS[_task.type].call(this, _task);
+            } catch (ex){
+                if(!(typeof ex == "instance" && ex instanceof ::MBAi.Company.Task.Failure)){
+                    throw ex;
+                }
+                ex.report();
+            }
+        }
+        else{
+            ::MBAi.Logger.debug("No actions found for task '{type}' in {division}.", {type = _task.type, division = this.getName()});
+        }
+
+        this.company.tasks.remove(_task);
     }
 }

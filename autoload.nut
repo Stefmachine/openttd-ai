@@ -2,6 +2,7 @@ MBAi <- {};
 
 class Autoloader
 {
+    static depth = 0;
     static loaded = {};
     static namespaces = {
         MBAi = {
@@ -13,25 +14,30 @@ class Autoloader
     // FQCN - Fully Qualified Class Name. Ex: MBAi.Namespace.Class
     function load(_fqcn)
     {
-        local fqcnParts = Autoloader.splitFqcn(_fqcn);
+        ::Autoloader.depth++;
+        local fqcnParts = ::Autoloader.splitFqcn(_fqcn);
 
         fqcnParts.reverse();
         local baseNamespace = fqcnParts.pop();
         fqcnParts.reverse();
 
-        local namespace = Autoloader.namespaces[baseNamespace].ref;
+        local namespace = ::Autoloader.namespaces[baseNamespace].ref;
         local accFqcn = baseNamespace;
         foreach(index, name in fqcnParts) {
             accFqcn += "."+name
             if (!(name in namespace)) {
                 try {
-                    require(Autoloader.fqcnToPath(accFqcn));
+                    local path = ::Autoloader.fqcnToPath(accFqcn);
+                    if(!(path in ::Autoloader.loaded)){
+                        ::Autoloader.loaded[path] <- true;
+                        ::require(path);
+                    }
                 } catch (ex){/* Silently fail */}
             }
 
             if(!(name in namespace)){
-                if(index == fqcnParts.len() - 1){
-                    throw "Could not resolve "+_fqcn+".";
+                if(index == fqcnParts.len() - 1 && ::Autoloader.depth == 1){
+                    throw "Could not resolve '"+_fqcn+"'.";
                 }
                 namespace[name] <- {};
             }
@@ -39,7 +45,7 @@ class Autoloader
             namespace = namespace[name];
         }
 
-        return namespace;
+        ::Autoloader.depth--;
     }
 
     function splitFqcn(_fqcn)
@@ -55,10 +61,10 @@ class Autoloader
 
     function fqcnToPath(_fqcn)
     {
-        local fqcnParts = Autoloader.splitFqcn(_fqcn);
+        local fqcnParts = ::Autoloader.splitFqcn(_fqcn);
 
         fqcnParts.reverse();
-        local baseDirectory = Autoloader.namespaces[fqcnParts.pop()].dir;
+        local baseDirectory = ::Autoloader.namespaces[fqcnParts.pop()].dir;
         fqcnParts.reverse();
 
         local path = baseDirectory + "/";
@@ -74,5 +80,5 @@ class Autoloader
 
 function using(_class)
 {
-    return Autoloader.load(_class);
+    ::Autoloader.load(_class);
 }

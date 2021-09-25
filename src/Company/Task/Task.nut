@@ -1,4 +1,4 @@
-using("MBAi.Data.Storable")
+using("MBAi.Data.Storable");
 
 class MBAi.Company.Task.Task extends MBAi.Data.Storable
 {

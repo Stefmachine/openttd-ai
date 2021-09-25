@@ -20,9 +20,11 @@ class MBAi.Company.Division.HumanResources extends MBAi.Company.Division.Divisio
 
     }
 
-    function performTask(_task)
+    function getTasksOperations()
     {
+        local executionTasks = {};
 
+        return executionTasks;
     }
 
     function hirePersonnel(_division = ::MBAi.Company.Division.Division.DIVISION_ANY)

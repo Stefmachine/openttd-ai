@@ -1,31 +1,29 @@
 using("MBAi.Data.Storable");
+using("MBAi.Utils.Array");
+using("MBAi.World.ModelFactory");
 
 class MBAi.Company.Project.Project extends MBAi.Data.Storable
 {
-    static TARGET_TOWN = "town";
-    static TARGET_INDUSTRY = "industry";
-
     constructor()
     {
         ::MBAi.Data.Storable.constructor();
-        this.evaluation = null
-        this.targets = []
-        this.destinationTiles = []
+        this.evaluation = null;
+        this.targets = [];
+        this.destinationTiles = [];
     }
 
-    function addTownTarget(_townId)
+    function addTarget(_target)
     {
         this.targets.push({
-            type = ::MBAi.Company.Project.Project.TARGET_TOWN
-            id = _townId
+            type = _target.getModelName()
+            id = _target.id
         });
     }
 
-    function addIndustryTarget(_industryId)
+    function getTargets()
     {
-        this.targets.push({
-            type = ::MBAi.Company.Project.Project.TARGET_INDUSTRY
-            id = _industryId
+        return ::MBAi.Utils.Array.map(this.targets, function(_target, _index, _targets){
+            return ::MBAi.World.ModelFactory.createModel(_target.type, _target.id);
         });
     }
 

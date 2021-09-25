@@ -18,9 +18,11 @@ class MBAi.Company.Division.Logistics extends MBAi.Company.Division.Division
 
     }
 
-    function performTask(_task)
+    function getTasksOperations()
     {
+        local executionTasks = {};
 
+        return executionTasks;
     }
 
     function evaluateProject(_project)

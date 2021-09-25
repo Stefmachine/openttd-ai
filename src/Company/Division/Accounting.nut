@@ -17,8 +17,10 @@ class MBAi.Company.Division.Accounting extends MBAi.Company.Division.Division
 
     }
 
-    function performTask(_task)
+    function getTasksOperations()
     {
+        local executionTasks = {};
 
+        return executionTasks;
     }
 }

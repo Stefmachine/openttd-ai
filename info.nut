@@ -1,5 +1,5 @@
 require("autoload.nut");
 
-local Info = using("MBAi.Info");
+using("MBAi.Info");
 
-RegisterAI(Info());
+RegisterAI(::MBAi.Info());
