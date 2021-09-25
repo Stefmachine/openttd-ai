@@ -16,7 +16,7 @@ class MBAi.World.Abstract.ModelRepository extends MBAi.Common.AbstractClass
 
     function refresh()
     {
-        this.list = this.getListApi()();
+        this.list = this.getListApi();
     }
 
     function findById(_id)

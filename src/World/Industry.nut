@@ -1,6 +1,9 @@
 using("MBAi.World.Abstract.Model");
 using("MBAi.World.Abstract.ModelRepository");
 using("MBAi.World.Company");
+using("MBAi.World.Cargo.IndustryProducingRepository");
+using("MBAi.World.Cargo.IndustryAcceptingRepository");
+
 
 class MBAi.World.Industry extends MBAi.World.Abstract.Model
 {
@@ -129,6 +132,16 @@ class MBAi.World.Industry extends MBAi.World.Abstract.Model
 
         return null;
     }
+
+    function getCargoProduced()
+    {
+        return ::MBAi.World.Cargo.IndustryProducingRepository(this);
+    }
+
+    function getCargoAccepted()
+    {
+        return ::MBAi.World.Cargo.IndustryAcceptingRepository(this);
+    }
 }
 
 class MBAi.World.Industry.Repository extends MBAi.World.Abstract.ModelRepository
@@ -140,9 +153,38 @@ class MBAi.World.Industry.Repository extends MBAi.World.Abstract.ModelRepository
 
     function getListApi()
     {
-        return ::AIIndustryList;
+        return ::AIIndustryList();
+    }
+}
+
+class MBAi.World.Industry.CargoAcceptingRepository extends MBAi.World.Industry.Repository
+{
+    cargo = null
+
+    constructor(_cargo)
+    {
+        this.cargo = _cargo;
+        ::MBAi.World.Industry.Repository.constructor();
     }
 
-    // AIIndustryList_CargoAccepting > Creates a list of industries that accepts a given cargo
-    // AIIndustryList_CargoProducing > Creates a list of industries that can produce a given cargo
+    function getListApi()
+    {
+        return ::AIIndustryList_CargoAccepting(this.cargo.id);
+    }
+}
+
+class MBAi.World.Industry.CargoProducingRepository extends MBAi.World.Industry.Repository
+{
+    cargo = null
+
+    constructor(_cargo)
+    {
+        this.cargo = _cargo;
+        ::MBAi.World.Industry.Repository.constructor();
+    }
+
+    function getListApi()
+    {
+        return ::AIIndustryList_CargoProducing(this.cargo.id);
+    }
 }

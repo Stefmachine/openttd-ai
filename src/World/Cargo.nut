@@ -1,5 +1,8 @@
 using("MBAi.World.Abstract.Model");
 using("MBAi.World.Abstract.ModelRepository");
+using("MBAi.World.Industry.CargoAcceptingRepository");
+using("MBAi.World.Industry.CargoProducingRepository")
+
 
 class MBAi.World.Cargo extends MBAi.World.Abstract.Model
 {
@@ -53,6 +56,16 @@ class MBAi.World.Cargo extends MBAi.World.Abstract.Model
         return this.isValid() ? this.getApi().GetDistributionType(this.id) : this.getApi().INVALID_DISTRIBUTION_TYPE;
     }
 
+    function getAcceptingIndustries()
+    {
+        return ::MBAi.World.Industry.CargoAcceptingRepository(this);
+    }
+
+    function getProducingIndustries()
+    {
+        return ::MBAi.World.Industry.CargoProducingRepository(this);
+    }
+
     // STATIC
     function isValidTownEffect(_townEffect)
     {
@@ -69,10 +82,54 @@ class MBAi.World.Cargo.Repository extends MBAi.World.Abstract.ModelRepository
 
     function getListApi()
     {
-        return ::AICargoList;
+        return ::AICargoList();
+    }
+}
+
+class MBAi.World.Cargo.IndustryProducingRepository extends MBAi.World.Cargo.Repository
+{
+    industry = null
+
+    constructor(_industry)
+    {
+        this.industry = _industry;
+        ::MBAi.World.Cargo.Repository.constructor();
     }
 
-    // AICargoList_IndustryAccepting	Creates a list of cargoes that the given industry accepts
-    // AICargoList_IndustryProducing	Creates a list of cargoes that the given industry can produce
-    // AICargoList_StationAccepting
+    function getListApi()
+    {
+        return ::AICargoList_IndustryProducing(this.industry.id);
+    }
+}
+
+class MBAi.World.Cargo.IndustryAcceptingRepository extends MBAi.World.Cargo.Repository
+{
+    industry = null
+
+    constructor(_industry)
+    {
+        this.industry = _industry;
+        ::MBAi.World.Cargo.Repository.constructor();
+    }
+
+    function getListApi()
+    {
+        return ::AICargoList_IndustryAccepting(this.industry.id);
+    }
+}
+
+class MBAi.World.Cargo.StationAcceptingRepository extends MBAi.World.Cargo.Repository
+{
+    station = null
+
+    constructor(_station)
+    {
+        this.station = _station;
+        ::MBAi.World.Cargo.Repository.constructor();
+    }
+
+    function getListApi()
+    {
+        return ::AICargoList_StationAccepting(this.station.id);
+    }
 }

@@ -83,6 +83,6 @@ class MBAi.World.Subsidy.Repository extends MBAi.World.Abstract.ModelRepository
 
     function getListApi()
     {
-        return ::AISubsidyList;
+        return ::AISubsidyList();
     }
 }

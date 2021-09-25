@@ -98,6 +98,6 @@ class MBAi.World.Company.Repository extends MBAi.World.Abstract.ModelRepository
 
     function getListApi()
     {
-        return ::AICompanyList;
+        return ::AICompanyList();
     }
 }

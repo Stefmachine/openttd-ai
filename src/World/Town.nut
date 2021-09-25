@@ -158,6 +158,6 @@ class MBAi.World.Town.Repository extends MBAi.World.Abstract.ModelRepository
 
     function getListApi()
     {
-        return ::AITownList;
+        return ::AITownList();
     }
 }
