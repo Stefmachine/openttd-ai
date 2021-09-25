@@ -2,6 +2,8 @@ using("MBAi.World.Abstract.Model");
 using("MBAi.World.Subsidy");
 using("MBAi.World.Town");
 using("MBAi.World.Industry");
+using("MBAi.World.Company");
+using("MBAi.World.Cargo");
 using("MBAi.World.Unknown");
 
 class MBAi.World.ModelFactory
@@ -9,7 +11,9 @@ class MBAi.World.ModelFactory
     static models = {
         [::MBAi.World.Subsidy.getModelName()] = ::MBAi.World.Subsidy,
         [::MBAi.World.Town.getModelName()] = ::MBAi.World.Town,
-        [::MBAi.World.Industry.getModelName()] = ::MBAi.World.Industry
+        [::MBAi.World.Industry.getModelName()] = ::MBAi.World.Industry,
+        [::MBAi.World.Company.getModelName()] = ::MBAi.World.Company,
+        [::MBAi.World.Cargo.getModelName()] = ::MBAi.World.Cargo
     };
 
     function createModel(_type, _id)

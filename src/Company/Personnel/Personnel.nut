@@ -9,6 +9,7 @@ class MBAi.Company.Personnel.Personnel extends MBAi.Data.Storable
         this.name = null;
         this.gender = null;
         this.division = ::MBAi.Company.Division.Division.DIVISION_ANY;
+        this.tasksDone = 0;
     }
 
     function getStorageKey()

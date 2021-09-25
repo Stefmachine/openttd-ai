@@ -22,7 +22,7 @@ class MBAi.Company.CompanyManager
     personnel = null;
     tasks = null;
 
-    administration = null;
+    admin = null;
     logistics = null;
     accounting = null;
     hr = null;
@@ -36,7 +36,7 @@ class MBAi.Company.CompanyManager
         this.tasks = ::MBAi.Company.Task.Repository();
 
         // Divisions
-        this.administration = ::MBAi.Company.Division.Administration(this);
+        this.admin = ::MBAi.Company.Division.Administration(this);
         this.logistics = ::MBAi.Company.Division.Logistics(this);
         this.accounting = ::MBAi.Company.Division.Accounting(this);
         this.hr = ::MBAi.Company.Division.HumanResources(this);
@@ -71,7 +71,7 @@ class MBAi.Company.CompanyManager
 
     function getDivisions()
     {
-        return [this.administration, this.logistics, this.accounting, this.hr, this.marketing];
+        return [this.admin, this.logistics, this.accounting, this.hr, this.marketing];
     }
 
     function setup()

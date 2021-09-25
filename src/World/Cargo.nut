@@ -65,12 +65,6 @@ class MBAi.World.Cargo extends MBAi.World.Abstract.Model
     {
         return ::MBAi.World.Industry.CargoProducingRepository(this);
     }
-
-    // STATIC
-    function isValidTownEffect(_townEffect)
-    {
-        return ::MBAi.World.Cargo.getApi().IsValidTownEffect(_townEffect);
-    }
 }
 
 class MBAi.World.Cargo.Repository extends MBAi.World.Abstract.ModelRepository
@@ -115,21 +109,5 @@ class MBAi.World.Cargo.IndustryAcceptingRepository extends MBAi.World.Cargo.Repo
     function getListApi()
     {
         return ::AICargoList_IndustryAccepting(this.industry.id);
-    }
-}
-
-class MBAi.World.Cargo.StationAcceptingRepository extends MBAi.World.Cargo.Repository
-{
-    station = null
-
-    constructor(_station)
-    {
-        this.station = _station;
-        ::MBAi.World.Cargo.Repository.constructor();
-    }
-
-    function getListApi()
-    {
-        return ::AICargoList_StationAccepting(this.station.id);
     }
 }

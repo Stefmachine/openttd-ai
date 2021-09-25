@@ -42,7 +42,9 @@ class MBAi.Company.Division.Division extends MBAi.Common.AbstractClass
 
     function getTasksPriority()
     {
-        return [];
+        return ::MBAi.Utils.Array.map(this.TASKS_OPERATIONS, function(_taskOp, _index, _taskOps){
+            return _taskOp.id;
+        });
     }
 
     function getPersonnelTask(_personnel)
@@ -83,15 +85,12 @@ class MBAi.Company.Division.Division extends MBAi.Common.AbstractClass
         _personnel.division = this.getName();
     }
 
-    function addTask(_type, _info)
+    function addTask(_task)
     {
-        local task = ::MBAi.Company.Task.Task();
-        task.division = this.getName();
-        task.type = _type;
-        task.info = _info;
-        this.company.tasks.add(task);
-        ::MBAi.Logger.debug("Added '{type}' task to {division} with info: {info}", {type = task.type, division = task.division, info = task.info});
-        return task;
+        _task.division = this.getName();
+        this.company.tasks.add(_task);
+        ::MBAi.Logger.debug("Added '{type}' task to {division} with info: {info}", {type = _task.type, division = _task.division, info = _task.info});
+        return _task;
     }
 
     function assignTasks()
@@ -133,18 +132,27 @@ class MBAi.Company.Division.Division extends MBAi.Common.AbstractClass
 
     function performTask(_task)
     {
-        if(_task.type in this.TASKS_OPERATIONS){
-            try {
-                this.TASKS_OPERATIONS[_task.type].call(this, _task);
-            } catch (ex){
-                if(!(typeof ex == "instance" && ex instanceof ::MBAi.Company.Task.Failure)){
-                    throw ex;
-                }
-                ex.report();
+        local taskOp = ::MBAi.Utils.Array.find(this.TASKS_OPERATIONS, function(_taskOp, _index, _taskOps):(_task){
+            return _taskOp.id == _task.type;
+        });
+
+        if(taskOp != null){
+            if(taskOp.perform(_task)){
+                // Task succeeded
+            }
+            else{
+                // Task failed
             }
         }
         else{
             ::MBAi.Logger.debug("No actions found for task '{type}' in {division}.", {type = _task.type, division = this.getName()});
+        }
+
+        if(_task.assignedPersonnel != null){
+            local personnel = this.company.personnel.findById(_task.assignedPersonnel);
+            if(personnel != null){
+                personnel.tasksDone++;
+            }
         }
 
         this.company.tasks.remove(_task);

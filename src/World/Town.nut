@@ -54,16 +54,14 @@ class MBAi.World.Town extends MBAi.World.Abstract.Model
         return this.isValid() && _cargo.isValid() ? this.getApi().GetLastMonthTransportedPercentage(this.id, _cargo.id) : 0;
     }
 
-    function getLastMonthReceived(_cargoTownEffect)
+    function getLastMonthReceived(_effect)
     {
-        return this.isValid() && ::MBAi.World.Cargo.isValidTownEffect(_cargoTownEffect)
-            ? this.getApi().GetLastMonthReceived(this.id, _cargoTownEffect) : 0;
+        return this.isValid() && ::MBAi.World.Town.isValidEffect(_effect) ? this.getApi().GetLastMonthReceived(this.id, _effect) : 0;
     }
 
-    function getCargoGoal(_cargoTownEffect)
+    function getCargoGoal(_effect)
     {
-        return this.isValid() && ::MBAi.World.Cargo.isValidTownEffect(_cargoTownEffect)
-            ? this.getApi().GetCargoGoal(this.id, _cargoTownEffect) : 0;
+        return this.isValid() && ::MBAi.World.Town.isValidEffect(_effect) ? this.getApi().GetCargoGoal(this.id, _effect) : 0;
     }
 
     function getGrowthRate()
@@ -146,6 +144,22 @@ class MBAi.World.Town extends MBAi.World.Abstract.Model
     function getRoadLayout()
     {
         return this.isValid() ? this.getApi().GetRoadLayout(this.id) : this.getApi().ROAD_LAYOUT_ORIGINAL;
+    }
+
+    // STATIC
+    function foundTown(_tile, _size, _city, _layout, _name)
+    {
+        return ::MBAi.World.Town.FoundTown(_tile, _size, _city, _layout, _name);
+    }
+
+    function isValidEffect(_effect)
+    {
+        return ::MBAi.World.Cargo.getApi().IsValidTownEffect(_effect);
+    }
+
+    function getEffectList()
+    {
+        return ::AITownEffectList();
     }
 }
 
