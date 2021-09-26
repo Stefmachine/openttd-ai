@@ -1,8 +1,14 @@
 using("MBAi.Company.Division.Division");
+using("MBAi.Company.Division.Task.EvaluateProjectCost");
+using("MBAi.Company.Division.Task.EvaluateProjectFeasibility");
+
 import("pathfinder.rail", "RailPathFinder", 1); // Wrap that
 
 class MBAi.Company.Division.Logistics extends MBAi.Company.Division.Division
 {
+    static TASK_EVALUATE_PROJECT_COST = ::MBAi.Company.Division.Task.EvaluateProjectCost;
+    static TASK_EVALUATE_PROJECT_FEASIBILITY = ::MBAi.Company.Division.Task.EvaluateProjectFeasibility
+
     function getName()
     {
         return "logistics";
@@ -20,9 +26,10 @@ class MBAi.Company.Division.Logistics extends MBAi.Company.Division.Division
 
     function getTasksOperations()
     {
-        local executionTasks = {};
-
-        return executionTasks;
+        return [
+            this.TASK_EVALUATE_PROJECT_COST(this.company),
+            this.TASK_EVALUATE_PROJECT_FEASIBILITY(this.company)
+        ];
     }
 
     function evaluateProject(_project)

@@ -1,7 +1,10 @@
 using("MBAi.Company.Division.Division");
+using("MBAi.Company.Division.Task.UnlockProjectBudget");
 
 class MBAi.Company.Division.Accounting extends MBAi.Company.Division.Division
 {
+    static TASK_UNLOCK_PROJECT_BUDGET = ::MBAi.Company.Division.Task.UnlockProjectBudget;
+
     function getName()
     {
         return "accounting";
@@ -19,8 +22,8 @@ class MBAi.Company.Division.Accounting extends MBAi.Company.Division.Division
 
     function getTasksOperations()
     {
-        local executionTasks = {};
-
-        return executionTasks;
+        return [
+            this.TASK_UNLOCK_PROJECT_BUDGET(this.company)
+        ];
     }
 }

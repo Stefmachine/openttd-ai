@@ -14,7 +14,7 @@ class MBAi.Company.Division.Task.MakeSubsidyProject extends MBAi.Company.Divisio
 
     function execute(_task)
     {
-        local subsidy = ::MBAi.World.Subsidy(_task.info.subsidyId);
+        local subsidy = ::MBAi.World.Subsidy(_task.getInfo("subsidyId"));
         if(subsidy.isValid() && !subsidy.isAwarded()){
             local source = subsidy.getSource();
             local destination = subsidy.getDestination();
@@ -28,6 +28,7 @@ class MBAi.Company.Division.Task.MakeSubsidyProject extends MBAi.Company.Divisio
                 ::MBAi.Logger.debug("Created project(#{pid}) from subsidy(#{sid}).", {pid = project.id, sid = subsidy.id});
 
                 this.companyManager.admin.addTask(this.companyManager.admin.TASK_MANAGE_PROJECT.createTask(project));
+                return true;
             }
 
             this.fail("Failed to create project from subsidy(#{sid}) as the source and/or destination is invalid.", {sid = subsidy.id});

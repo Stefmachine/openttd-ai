@@ -7,9 +7,8 @@ class MBAi.Company.Project.Project extends MBAi.Data.Storable
     constructor()
     {
         ::MBAi.Data.Storable.constructor();
-        this.evaluations = {};
+        this.actionStates = {};
         this.targets = [];
-        this.destinationTiles = [];
         this.completed = false;
     }
 
@@ -26,6 +25,16 @@ class MBAi.Company.Project.Project extends MBAi.Data.Storable
         return ::MBAi.Utils.Array.map(this.targets, function(_target, _index, _targets){
             return ::MBAi.World.ModelFactory.createModel(_target.type, _target.id);
         });
+    }
+
+    function setActionState(_id, _state)
+    {
+        return this.actionStates[_id] <- _state;
+    }
+
+    function getActionState(_id, _default = null)
+    {
+        return (_id in this.actionStates) ? this.actionStates[_id] : _default;
     }
 
     function getStorageKey()

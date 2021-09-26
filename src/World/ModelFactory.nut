@@ -19,11 +19,11 @@ class MBAi.World.ModelFactory
     function createModel(_type, _id)
     {
         if(_type in ::MBAi.World.ModelFactory.models){
-            MBAi.Logger.debug("Created type {type}", {type = _type});
+            MBAi.Logger.debug("ModelFactory created type {type}", {type = _type});
             return ::MBAi.World.ModelFactory.models[_type](_id);
         }
 
-        MBAi.Logger.debug("Created type unknown from {type}", {type = _type});
+        MBAi.Logger.debug("ModelFactory created type unknown from {type}", {type = _type});
         return ::MBAi.World.ModelFactory.createUnknown(_id);
     }
 

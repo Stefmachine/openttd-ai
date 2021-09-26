@@ -11,13 +11,12 @@ class MBAi.Data.Store
 
         projects = {
             id = []
-            evaluations = []
+            actionStates = []
             targets = []
-            destinationTiles = []
             completed = []
             __meta = {
                 nextId = 1
-                columns = ["id", "evaluations", "targets", "destinationTiles", "completed"]
+                columns = ["id", "actionStates", "targets", "completed"]
             }
         }
 

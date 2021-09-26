@@ -28,7 +28,7 @@ class MBAi.Company.Division.Marketing extends MBAi.Company.Division.Division
     function getTasksOperations()
     {
         return [
-            ::MBAi.Company.Division.Task.MakeSubsidyProject(this.company)
+            this.TASK_MAKE_SUBSIDY_PROJECT(this.company)
         ];
     }
 }

@@ -23,7 +23,7 @@ class MBAi.Company.Division.Administration extends MBAi.Company.Division.Divisio
     function getTasksOperations()
     {
         return [
-            ::MBAi.Company.Division.Task.ManageProject(this.company)
+            this.TASK_MANAGE_PROJECT(this.company)
         ];
     }
 }

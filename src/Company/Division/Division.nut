@@ -136,25 +136,23 @@ class MBAi.Company.Division.Division extends MBAi.Common.AbstractClass
             return _taskOp.id == _task.type;
         });
 
+        local taskDone = true;
         if(taskOp != null){
-            if(taskOp.perform(_task)){
-                // Task succeeded
-            }
-            else{
-                // Task failed
-            }
+            taskDone = taskOp.perform(_task);
         }
         else{
             ::MBAi.Logger.debug("No actions found for task '{type}' in {division}.", {type = _task.type, division = this.getName()});
         }
 
-        if(_task.assignedPersonnel != null){
-            local personnel = this.company.personnel.findById(_task.assignedPersonnel);
-            if(personnel != null){
-                personnel.tasksDone++;
+        if(taskDone){
+            if(_task.assignedPersonnel != null){
+                local personnel = this.company.personnel.findById(_task.assignedPersonnel);
+                if(personnel != null){
+                    personnel.tasksDone++;
+                }
             }
-        }
 
-        this.company.tasks.remove(_task);
+            this.company.tasks.remove(_task);
+        }
     }
 }

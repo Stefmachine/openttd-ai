@@ -22,6 +22,16 @@ class MBAi.Company.Task.Task extends MBAi.Data.Storable
         this.assignedPersonnel = null;
     }
 
+    function setInfo(_name, _value)
+    {
+        this.info[_name] <- _value;
+    }
+
+    function getInfo(_name, _default = null)
+    {
+        return (_name in this.info) ? this.info[_name] : _default;
+    }
+
     function getStorageKey()
     {
         return "tasks";
