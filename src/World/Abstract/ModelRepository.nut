@@ -2,8 +2,6 @@ using("MBAi.Common.AbstractClass");
 
 class MBAi.World.Abstract.ModelRepository extends MBAi.Common.AbstractClass
 {
-    list = null;
-
     constructor()
     {
         this.ensureSlotImplementation("getModelClass", "MBAi.World.Abstract.ModelRepository");
@@ -11,12 +9,16 @@ class MBAi.World.Abstract.ModelRepository extends MBAi.Common.AbstractClass
         if(!(this.getModelClass().instance() instanceof ::MBAi.World.Abstract.Model)){
             throw "'getModelClass' must return class extending MBAi.World.Abstract.Model.";
         }
-        this.refresh();
     }
 
-    function refresh()
+    function getList()
     {
-        this.list = this.getListApi();
+        local list = this.getListApi();
+        list.Valuate(function(_id){
+            return _id;
+        });
+        list.Begin();
+        return list;
     }
 
     function findById(_id)
@@ -43,29 +45,30 @@ class MBAi.World.Abstract.ModelRepository extends MBAi.Common.AbstractClass
 
     function get(_index)
     {
-        local list = this.listApi();
-        if(list.HasItem(_index)){
-            return this.getWorldClass()(list.GetValue(_index));
+        if(_index > -1 && _index < this.count()){
+            return this.toArray()[_index];
         }
+
         return null;
     }
 
     function count()
     {
-        return this.listApi().Count();
+        return this.getList().Count();
     }
 
     function toArray()
     {
-        return ::MBAi.Utils.Array.map(this.listApi(), function(_id, _index, _list){
-            return this.get(_index);
+        local list = this.getList();
+        return ::MBAi.Utils.Array.map(list, function(_id, _index, _list){
+            return this.getModelClass()(_id);
         });
     }
 
     function _nexti(_previousIndex)
     {
         local nextIndex = _previousIndex != null ? _previousIndex + 1 : 0;
-        if(this.listApi().HasItem(nextIndex)){
+        if(this.count() > nextIndex){
             return nextIndex;
         }
         return null;

@@ -18,7 +18,7 @@ class MBAi.Company.Division.Task.ManageProject extends MBAi.Company.Division.Tas
             this.fail("Cannot manage a project that doesn't exist.");
         }
 
-        if(project.getActionState("feasibility_evaluation") == false){
+        if(project.getActionState("feasible") == false){
             return true; // Task is done
         }
 
@@ -26,27 +26,21 @@ class MBAi.Company.Division.Task.ManageProject extends MBAi.Company.Division.Tas
             return true; // Task is done
         }
 
-        if(project.getActionState("feasibility_evaluation") == null){
-            if(_task.getInfo("feasibility_evaluation_task", false) == false){
-                this.companyManager.logistics.addTask(::MBAi.Company.Division.Task.EvaluateProjectFeasibility.createTask(project));
-                _task.setInfo("feasibility_evaluation_task", true);
-            }
-        }
-        else if(project.getActionState("cost_evaluation") == null){
-            if(_task.getInfo("cost_evaluation_task", false) == false){
-                this.companyManager.logistics.addTask(::MBAi.Company.Division.Task.EvaluateProjectCost.createTask(project));
-                _task.setInfo("cost_evaluation_task", true);
+        if(project.getActionState("feasible") == null){
+            if(_task.getInfo("plan_task", false) == false){
+                this.companyManager.logistics.addTask(this.companyManager.logistics.TASK_PLAN_PROJECT.createTask(project));
+                _task.setInfo("plan_task", true);
             }
         }
         else if(project.getActionState("budget_unlocked") == null){
-            if(_task.getInfo("budget_unlock_task", false) == false){
-                this.companyManager.accounting.addTask(::MBAi.Company.Division.Task.UnlockBudget.createTask(project));
-                _task.setInfo("budget_unlock_task", true);
+            if(_task.getInfo("unlock_budget_task", false) == false){
+                this.companyManager.accounting.addTask(this.companyManager.accounting.TASK_UNLOCK_PROJECT_BUDGET.createTask(project));
+                _task.setInfo("unlock_budget_task", true);
             }
         }
         else{
             if(_task.getInfo("build_task", false) == false){
-                this.companyManager.logistics.addTask(::MBAi.Company.Division.Task.BuildProject.createTask(project));
+                this.companyManager.logistics.addTask(this.companyManager.logistics.TASK_BUILD_PROJECT.createTask(project));
                 _task.setInfo("build_task", true);
             }
         }

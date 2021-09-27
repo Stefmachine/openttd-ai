@@ -16,4 +16,9 @@ class MBAi.World.Abstract.Model extends MBAi.Common.AbstractClass
     {
         return _model instanceof ::MBAi.World.Abstract.Model && this.id == _model.id && this.getModelName() == _model.getModelName();
     }
+
+    function toData()
+    {
+        return {type = this.getModelName(), id = this.id};
+    }
 }
