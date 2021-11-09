@@ -12,13 +12,12 @@ class MBAi.Company.Division.Task.BuildProject extends MBAi.Company.Division.Task
 
     function execute(_task)
     {
-        local projectId = _task.getInfo("projectId");
-        local project = this.companyManager.projects.findById(projectId);
+        local project = this.companyManager.projects.findById(_task.getInfo("projectId"));
         if(project == null){
             this.fail("Cannot build project that doesn't exist.");
         }
 
-        return true;
+        return this.done();
     }
 
     // STATIC

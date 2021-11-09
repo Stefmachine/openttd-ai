@@ -12,18 +12,17 @@ class MBAi.Company.Division.Task.ManageProject extends MBAi.Company.Division.Tas
 
     function execute(_task)
     {
-        local projectId = _task.getInfo("projectId");
-        local project = this.companyManager.projects.findById(projectId);
+        local project = this.companyManager.projects.findById(_task.getInfo("projectId"));
         if(project == null){
             this.fail("Cannot manage a project that doesn't exist.");
         }
 
         if(project.getActionState("feasible") == false){
-            return true; // Task is done
+            this.fail("Project is not feasible."); // Task is done
         }
 
         if(project.getActionState("budget_unlocked") == false){
-            return true; // Task is done
+            this.fail("Project budget could not be unlocked."); // Task is done
         }
 
         if(project.getActionState("feasible") == null){
@@ -46,10 +45,10 @@ class MBAi.Company.Division.Task.ManageProject extends MBAi.Company.Division.Tas
         }
 
         if(!project.completed){
-            return false;
+            return this.remain();
         }
 
-        return true;
+        return this.done();
     }
 
     // STATIC

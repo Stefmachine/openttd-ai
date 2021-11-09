@@ -44,6 +44,34 @@ class MBAi.Utils
                 return _data+"";
         }
     }
+
+    function methodExists(_method, _object)
+    {
+        return _method in _object && typeof _object[_method] == "function";
+    }
+
+    function propertyExists(_prop, _object)
+    {
+        return _prop in _object;
+    }
+
+    function implements(_interface, _object)
+    {
+        foreach (name, attribute in _interface) {
+            if(typeof attribute == "function"){
+                if(!(::MBAi.Utils.methodExists(name, _object))){
+                    return false;
+                }
+            }
+            else{
+                if(!(::MBAi.Utils.propertyExists(name, _object))){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }
 
 class MBAi.Utils.Array
@@ -103,6 +131,28 @@ class MBAi.Utils.Array
         }
 
         return null;
+    }
+
+    function concat(...)
+    {
+        local concat = [];
+        for (local i = 0; i < vargc; i++) {
+            if(typeof vargv[i] == "array"){
+                foreach (element in vargv[i]) {
+                    concat.push(element);
+                }
+            }
+        }
+
+        return concat;
+    }
+
+    function unique(_array, _uniqueFunction = null)
+    {
+        local mappedArray = _uniqueFunction != null ? ::MBAi.Utils.Array.map(_array, _uniqueFunction) : _array;
+        return ::MBAi.Utils.Array.filter(_array, function(_element, _index, _array):(mappedArray,_uniqueFunction){
+            return ::MBAi.Utils.Array.indexOf(mappedArray, _uniqueFunction != null ? _uniqueFunction(_element, _index, _array) : _element) == _index;
+        });
     }
 }
 

@@ -8,6 +8,7 @@ using("MBAi.World.Unknown");
 
 class MBAi.World.ModelFactory
 {
+    static cache = {};
     static models = {
         [::MBAi.World.Subsidy.getModelName()] = ::MBAi.World.Subsidy,
         [::MBAi.World.Town.getModelName()] = ::MBAi.World.Town,
@@ -18,13 +19,22 @@ class MBAi.World.ModelFactory
 
     function createModel(_type, _id)
     {
-        if(_type in ::MBAi.World.ModelFactory.models){
-            MBAi.Logger.debug("ModelFactory created type {type}", {type = _type});
-            return ::MBAi.World.ModelFactory.models[_type](_id);
+        local model = ::MBAi.World.ModelFactory.getFromCache(_type, _id);
+        if(model != null){
+            return model;
         }
 
-        MBAi.Logger.debug("ModelFactory created type unknown from {type}", {type = _type});
-        return ::MBAi.World.ModelFactory.createUnknown(_id);
+        if(_type in ::MBAi.World.ModelFactory.models){
+            MBAi.Logger.debug("ModelFactory created type {type}", {type = _type});
+            model = ::MBAi.World.ModelFactory.models[_type](_id);
+        }
+        else{
+            MBAi.Logger.debug("ModelFactory created type unknown from {type}", {type = _type});
+            model = ::MBAi.World.ModelFactory.createUnknown(_id);
+        }
+
+        ::MBAi.World.ModelFactory.saveToCache(_type, _id, model);
+        return model;
     }
 
     function createUnknown(_id)
@@ -44,5 +54,17 @@ class MBAi.World.ModelFactory
         }
 
         return ::MBAi.World.ModelFactory.createUnknown(_id);
+    }
+
+    function getFromCache(_type, _id)
+    {
+        local key = _type+':'+_id;
+        return (key in ::MBAi.World.ModelFactory.cache) ? ::MBAi.World.ModelFactory.cache[key] : null;
+    }
+
+    function saveToCache(_type, _id, _model)
+    {
+        ::MBAi.World.ModelFactory.cache[_type+':'+_id] <- _model;
+        return true;
     }
 }

@@ -19,11 +19,22 @@ class MBAi.Company.Division.Task.TaskExecution extends MBAi.Common.AbstractClass
             return this.execute(_task);
         } catch (ex){
             if(!(typeof ex == "instance" && ex instanceof ::MBAi.Company.Division.Task.TaskExecution.Failure)){
+                ::MBAi.Logger.error("Error thrown from task '{type}' (#{tid})", {tid = _task.id, type = _task.type});
                 throw ex;
             }
             ex.report();
             return this.onFail(_task);
         }
+    }
+
+    function done()
+    {
+        return true;
+    }
+
+    function remain()
+    {
+        return false;
     }
 
     function fail(_message, _context)
@@ -33,8 +44,8 @@ class MBAi.Company.Division.Task.TaskExecution extends MBAi.Common.AbstractClass
 
     function onFail(_task)
     {
-        // Handler if the task fails. No-op by default.
-        return true;
+        // Handler if the task fails. Task done by default.
+        return this.done();
     }
 
     // STATIC

@@ -12,13 +12,12 @@ class MBAi.Company.Division.Task.UnlockProjectBudget extends MBAi.Company.Divisi
 
     function execute(_task)
     {
-        local projectId = _task.getInfo("projectId");
-        local project = this.companyManager.projects.findById(projectId);
+        local project = this.companyManager.projects.findById(_task.getInfo("projectId"));
         if(project == null){
             this.fail("Cannot unlock budget for project that doesn't exist.");
         }
 
-        return true;
+        return this.done();
     }
 
     // STATIC

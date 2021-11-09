@@ -1,4 +1,4 @@
-MBAi.Resource.company.names = [
+::MBAi.Resource.register("company.names", [
     "Transport",
     "Transport Rush",
     "Check Transport",
@@ -59,4 +59,4 @@ MBAi.Resource.company.names = [
     "Pivot Transport",
     "Argon Transport",
     "Emerald Transport"
-];
+]);

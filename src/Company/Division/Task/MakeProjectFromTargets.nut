@@ -32,7 +32,7 @@ class MBAi.Company.Division.Task.MakeProjectFromTargets extends MBAi.Company.Div
         this.companyManager.projects.add(project);
         ::MBAi.Logger.debug("Created project(#{pid}) from target list.", {pid = project.id});
         this.companyManager.admin.addTask(this.companyManager.admin.TASK_MANAGE_PROJECT.createTask(project));
-        return true;
+        return this.done();
     }
 
     // STATIC

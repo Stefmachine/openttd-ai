@@ -1,6 +1,7 @@
 using("MBAi.World.Abstract.Model");
 using("MBAi.World.Abstract.ModelRepository");
 using("MBAi.World.Company");
+using("MBAi.Common.Collection");
 
 class MBAi.World.Town extends MBAi.World.Abstract.Model
 {
@@ -160,6 +161,23 @@ class MBAi.World.Town extends MBAi.World.Abstract.Model
     function getEffectList()
     {
         return ::AITownEffectList();
+    }
+
+    function getCargoProduced()
+    {
+        return ::MBAi.World.Cargo.Repository().findBy(function(_cargo, _index, _cargoes){
+            return _cargo.hasCargoClass(MBAi.World.Cargo.getApi().CC_PASSENGERS)
+                || _cargo.hasCargoClass(MBAi.World.Cargo.getApi().CC_MAIL);
+        });
+    }
+
+    function getCargoAccepted()
+    {
+        return ::MBAi.World.Cargo.Repository().findBy(function(_cargo, _index, _cargoes){
+            return _cargo.hasCargoClass(MBAi.World.Cargo.getApi().CC_PASSENGERS)
+                || _cargo.hasCargoClass(MBAi.World.Cargo.getApi().CC_MAIL)
+                || _cargo.hasCargoClass(MBAi.World.Cargo.getApi().CC_EXPRESS);
+        });
     }
 }
 

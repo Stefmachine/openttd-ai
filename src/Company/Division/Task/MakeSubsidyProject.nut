@@ -28,7 +28,7 @@ class MBAi.Company.Division.Task.MakeSubsidyProject extends MBAi.Company.Divisio
                 ::MBAi.Logger.debug("Created project(#{pid}) from subsidy(#{sid}).", {pid = project.id, sid = subsidy.id});
 
                 this.companyManager.admin.addTask(this.companyManager.admin.TASK_MANAGE_PROJECT.createTask(project));
-                return true;
+                return this.done();
             }
 
             this.fail("Failed to create project from subsidy(#{sid}) as the source and/or destination is invalid.", {sid = subsidy.id});

@@ -1,4 +1,4 @@
-MBAi.Resource.company.personnel = {
+::MBAi.Resource.register("company.personnel", {
     [::AICompany.GENDER_FEMALE] = [
         "Phyliss",
         "Jenae",
@@ -204,4 +204,4 @@ MBAi.Resource.company.personnel = {
         "Bufkin",
         "Hockaday"
     ]
-};
+});

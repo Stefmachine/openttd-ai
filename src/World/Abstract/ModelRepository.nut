@@ -61,7 +61,7 @@ class MBAi.World.Abstract.ModelRepository extends MBAi.Common.AbstractClass
     {
         local list = this.getList();
         return ::MBAi.Utils.Array.map(list, function(_id, _index, _list){
-            return this.getModelClass()(_id);
+            return this.getModelClass()(_id); //Use ModelFactory and caching
         });
     }
 
